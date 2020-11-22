@@ -26,6 +26,7 @@ class Board {
     backtrack(data){
         // assign zeros to all cells
         // randomly generate 3 groups
+        console.log("foo", data);
         let newData = this.pick_next_cell(data);
         if (newData.result) {
             return newData.data;
@@ -36,22 +37,23 @@ class Board {
     pick_next_cell(data) {
         // duplicate data array
         let tempData = data.map((x) => x);
+        console.log(tempData);
 
         // find next empty cell
         // if no empty cells, return data
         let empty = [-1, -1];
         for (let i = 0; i < tempData.length; i++) {
-            for (let j = 0; j < tempData.length; j++) {
+            for (let j = 0; j < tempData[i].length; j++) {
                 if (tempData[i][j] == 0) {
                     empty = [i, j];
                     break;
                 }
             }
-            if (empty != [-1, -1]) {
+            if (empty[0] != -1 && empty[1] != -1) {
                 break;
             }
         }
-        if (empty == [-1, -1]) {
+        if (empty[0] == -1 && empty[1] == -1) {
             return {
                 data: tempData,
                 result: true
@@ -76,7 +78,8 @@ class Board {
         //      if any call returns true, return data
         while (safe.length > 0) {
             let rand = Math.floor(Math.random() * safe.length);
-            let numToCheck = safe.splice(rand, 1);
+            let numToCheck = safe.splice(rand, 1)[0];
+            tempData[empty[0]][empty[1]] = numToCheck;
             let result = this.pick_next_cell(tempData);
             if (result.result) {
                 return {
