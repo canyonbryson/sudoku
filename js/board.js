@@ -1,11 +1,28 @@
 class Board {
     constructor() {
+        this.data = [];
         this.generate();
     }
 
     generate() {
-
+        for (let i = 0; i < this.data.length; i++) {
+            this.data[i] = [];
+            for (let j = 0; j < this.data[i].length; j++) {
+                this.data[i].push(j);
+            }
+            shuffle(data[i]);
+        }
     }
+
+    // validate(data){
+    //     for (let i = 0; i < this.data.length; i++) {
+    //         this.data[i] = [];
+    //         for (let j = 0; j < this.data[i].length; j++) {
+    //             this.data[i].push(j);
+    //         }
+    //         shuffle(data[i]);
+    //     }
+    // }
 
     draw(ctx) {
         let cellSize = Math.floor(Math.min(ctx.canvas.width, ctx.canvas.height) / 9);
@@ -22,6 +39,15 @@ class Board {
                 // text(this.data[i][j], origX + cellSize * i + cellSize * 0.5, origY + cellSize * j + cellSize * 0.5);
             }
         }
+    }
+
+    shuffle(array){
+        for(let i = array.length - 1; i > 0; i--){
+            const j = Math.floor(Math.random() * i);
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+          }
     }
 }
 
@@ -40,4 +66,5 @@ function text(text, x, y) {
     ctx.textAlign = "center";
     ctx.fillText(text, x, y);
     ctx.closePath();
+
 }
