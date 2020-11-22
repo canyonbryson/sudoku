@@ -21,6 +21,7 @@ class Board {
                 let possibleNums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
                 while (true) {
                     let rand = Math.floor(Math.random() * possibleNums.length);
+                    // let isValid = this.valid(this.data);
                     let isValid = true;
                     if (isValid) {
                         this.data[i][j] = possibleNums[rand];
