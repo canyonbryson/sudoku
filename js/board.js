@@ -9,9 +9,17 @@ class Board {
     }
 
     generate(){
+        this.data.length = 9;
+        for (let i = 0; i < 9; i++){
+            this.data[i] = [0,0,0,0,0,0,0,0,0];
+        }
         let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         this.shuffle(nums);
-        //add to group 1, 5, 9
+        this.addToGroup(this.data, nums, 1);
+        this.shuffle(nums);
+        this.addToGroup(this.data, nums, 5);
+        this.shuffle(nums);
+        this.addToGroup(this.data, nums, 9);
         this.backtrack(this.data);
     }
 
@@ -28,6 +36,15 @@ class Board {
           }
     }
 
+    addToGroup(data, list, group) {
+        // group - 1 % 3 = 0 1 2, * floor(group / 3)
+        for (let i = 0; i < 3; i++){
+            let g = Math.floor((group - 1)/3) * 3; //Start at row 0, 3, 6
+            data[g + i][g] = list[i];
+            data[g + i][g + 1] = list[i+3];
+            data[g + i][g + 2] = list[i+6];
+        }
+    }
 
     valid(data){
         let row = [0,0,0,0,0,0,0,0,0];
