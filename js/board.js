@@ -26,7 +26,7 @@ class Board {
     backtrack(data){
         // assign zeros to all cells
         // randomly generate 3 groups
-        let data = this.pick_next_cell();
+        data = this.pick_next_cell();
         return data;
     }
 
