@@ -72,7 +72,6 @@ class Board {
                 safe.push(i + 1);
             }
         }
-        debugger
         
         // loop through all safe numbers
         //      choose random element from safe numbers
@@ -133,14 +132,14 @@ class Board {
         let row = [0,0,0,0,0,0,0,0,0];
         let col = [0,0,0,0,0,0,0,0,0];
         let valid = true;
-        for (let i = 0; i < this.data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
             row = [0,0,0,0,0,0,0,0,0];
             col = [0,0,0,0,0,0,0,0,0];
-            for (let j = 0; j < this.data[i].length; j++) {
-                if (this.data[i][j] != 0)
-                    row[this.data[i][j] - 1] += 1;
-                if (this.data[j][i] != 0)
-                    col[this.data[j][i] - 1] += 1;
+            for (let j = 0; j < data[i].length; j++) {
+                if (data[i][j] != 0)
+                    row[data[i][j] - 1] += 1;
+                if (data[j][i] != 0)
+                    col[data[j][i] - 1] += 1;
             }
             valid = (!row.includes(2) && !col.includes(2));
             if (!valid){
@@ -153,7 +152,7 @@ class Board {
                 box = [0,0,0,0,0,0,0,0,0];
                 for (let ii = 0; ii < 3; ii++) {
                     for (let jj = 0; jj < 3; jj++) {
-                        box[this.data[i*3 + ii][j*3 + jj] - 1] += 1;
+                        box[data[i*3 + ii][j*3 + jj] - 1] += 1;
                     }
                 }
                 valid = (!box.includes(2) && !box.includes(3));
