@@ -36,7 +36,7 @@ class Board {
 
     pick_next_cell(data) {
         // duplicate data array
-        let tempData = data.map((x) => x);
+        let tempData = this.clone_array(data);
         console.log(tempData);
 
         // find next empty cell
@@ -95,6 +95,17 @@ class Board {
             result: false
         };
 
+    }
+
+    clone_array(array) {
+        let newArray = [];
+        for (let i = 0; i < array.length; i++) {
+            newArray.push([]);
+            for (let j = 0; j < array.length; j++) {
+                newArray[i].push(array[i][j]);
+            }
+        }
+        return newArray;
     }
 
     shuffle(array) {
