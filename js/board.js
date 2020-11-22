@@ -16,18 +16,26 @@ class Board {
     generate() {
         this.data = [];
         for (let i = 0; i < 9; i++) {
+            this.data.push([]);
+            for (let j = 0; j < 9; j++) {
+
+            }
+        }
+        for (let i = 0; i < 9; i++) {
             this.data[i] = [];
             for (let j = 0; j < 9; j++) {
                 let possibleNums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
                 while (true) {
                     let rand = Math.floor(Math.random() * possibleNums.length);
-                    // let isValid = this.valid(this.data);
-                    let isValid = true;
+                    this.data[i][j] = possibleNums[rand];
+                    let isValid = this.valid(this.data);
                     if (isValid) {
-                        this.data[i][j] = possibleNums[rand];
                         break;
                     } else {
-                        possibleNums = possibleNums.splice(rand, 1);
+                        possibleNums.splice(rand, 1);
+                    }
+                    if (possibleNums.length < 3) {
+                        console.log(i, j, possibleNums);
                     }
                     if (possibleNums.length == 0) { // failed.
                         console.log("failed");
@@ -39,54 +47,35 @@ class Board {
         }
     }
 
-    // validRow(data){
-    //     sumRows = 0;
-    //     for (let j = 0; j < this.data.length; j++) {
-    //         sumRows += this.data[j];
-    //             this.data[i].push(j);
-    //         }
-    //         this.shuffle(this.data[i]);
-    //     }
-    //     return (sumRows == 45);
-    // }
-
-    valid(data){
-        row = [0,0,0,0,0,0,0,0,0];
-        col = [0,0,0,0,0,0,0,0,0];
-        let valid = true;
+    valid() {
         for (let i = 0; i < this.data.length; i++) {
-            row = [0,0,0,0,0,0,0,0,0];
-            col = [0,0,0,0,0,0,0,0,0];
+            let row = [0,0,0,0,0,0,0,0,0];
+            let col = [0,0,0,0,0,0,0,0,0];
             for (let j = 0; j < this.data[i].length; j++) {
-                row[this.data[i][j]] += 1;
-                col[this.data[j][i]] += 1;
-                // box[this.data[][]]
+                row[this.data[i][j] - 1] += 1;
+                col[this.data[j][i] - 1] += 1;
             }
-            valid = (!row.includes(2) && !col.includes(2));
-            if (!valid){
-                return valid;
+            if (row.includes(2) || col.includes(2)) {
+                console.log(row);
+                // console.log("fail1");
+                return false;
             }
         }
-        box = [0,0,0,0,0,0,0,0,0];
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                box = [0,0,0,0,0,0,0,0,0];
+                let box = [0,0,0,0,0,0,0,0,0];
                 for (let ii = 0; ii < 3; ii++) {
                     for (let jj = 0; jj < 3; jj++) {
-                        // sumBox += data[i*3][j];
-                        // sumBox += data[i*3 + 1][j];
-                        // sumBox += data[i*3 + 2][j];
-                        box[this.data[i*3 + ii][j*3 + jj]] += 1;
+                        box[this.data[i*3 + ii][j*3 + jj] - 1] += 1;
                     }
                 }
-                valid = (!box.includes(2));
-                if (!valid){
+                if (box.includes(2)){
+                    console.log("fail2");
                     return false;
                 }
             }
         }
-        valid = (sumBox == 45);
-        return valid;
+        return true;
     }
 
     draw(ctx) {
