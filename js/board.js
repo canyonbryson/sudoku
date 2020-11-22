@@ -83,7 +83,7 @@ class Board {
             let result = this.pick_next_cell(tempData);
             if (result.result) {
                 return {
-                    data: tempData,
+                    data: result.data,
                     result: true
                 };
             }
