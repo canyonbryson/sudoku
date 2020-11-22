@@ -69,7 +69,7 @@ function line(ctx, x1, y1, x2, y2, num) {
 
 function draw_text(ctx, text, x, y) {
     ctx.beginPath();
-    ctx.fillText(text, x, y);
+    ctx.fillText(text, x, y + 4);
     ctx.closePath();
 }
 
