@@ -16,7 +16,43 @@ class Board {
     }
 
     backtrack(data){
-        //backtracking
+        // assign zeros to all cells
+        // randomly generate 3 groups
+        let data = this.pick_next_cell();
+        return data;
+    }
+
+    pick_next_cell(data) {
+        // duplicate data array
+        let tempData = data;
+
+        // find next empty cell
+        // if no empty cells, return data
+        let empty = [-1, -1];
+        for (let i = 0; i < tempData.length; i++) {
+            for (let j = 0; j < tempData.length; j++) {
+                if (tempData[i][j] == 0) {
+                    empty = [i, j];
+                    break;
+                }
+            }
+            if (empty != [-1, -1]) {
+                break;
+            }
+        }
+        if (empty == [-1, -1]) {
+            return tempData;
+        }
+
+        // initalize empty safe array
+        // for loop 0-8
+        //      assign next empty cell each number
+        //      append number to safe array if new grid is valid
+        
+        // loop through all safe numbers
+        //      recursively call pick_next_cell() for each safe number
+        //      if any call returns true, return data
+
     }
 
     shuffle(array) {
