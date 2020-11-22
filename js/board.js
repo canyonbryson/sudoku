@@ -20,7 +20,7 @@ class Board {
         this.addToGroup(this.data, nums, 5);
         this.shuffle(nums);
         this.addToGroup(this.data, nums, 9);
-        this.backtrack(this.data);
+        this.data = this.backtrack(this.data);
     }
 
     backtrack(data){
