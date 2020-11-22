@@ -50,8 +50,8 @@ class Board {
     // }
 
     valid(data){
-        row = [0,0,0,0,0,0,0,0,0];
-        col = [0,0,0,0,0,0,0,0,0];
+        let row = [0,0,0,0,0,0,0,0,0];
+        let col = [0,0,0,0,0,0,0,0,0];
         let valid = true;
         for (let i = 0; i < this.data.length; i++) {
             row = [0,0,0,0,0,0,0,0,0];
@@ -66,7 +66,7 @@ class Board {
                 return valid;
             }
         }
-        box = [0,0,0,0,0,0,0,0,0];
+        let box = [0,0,0,0,0,0,0,0,0];
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 box = [0,0,0,0,0,0,0,0,0];
