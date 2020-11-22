@@ -1,9 +1,22 @@
 class Board {
     constructor() {
         this.data = [];
-        this.generate();
+        let valid = false;
+        while (!valid) {
+            this.generate();
+            valid = this.valid(this.data);
+        }
     }
-    
+
+    generate(){
+        let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        this.shuffle(nums);
+        for (let i = 0; i < 9; i++) {
+            this.data[i] = this.rotate(nums, 3*(i%3) + Math.floor(i/3));
+        }
+        this.flip(this.data);
+    }
+
     shuffle(array) {
         for(let i = array.length - 1; i > 0; i--){
             const j = Math.floor(Math.random() * i);
@@ -13,41 +26,52 @@ class Board {
           }
     }
 
-    generate() {
-        this.data = [];
-        for (let i = 0; i < 9; i++) {
-            this.data[i] = [];
-            for (let j = 0; j < 9; j++) {
-                let possibleNums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-                while (true) {
-                    let rand = Math.floor(Math.random() * possibleNums.length);
-                    let isValid = true;
-                    if (isValid) {
-                        this.data[i][j] = possibleNums[rand];
-                        break;
-                    } else {
-                        possibleNums = possibleNums.splice(rand, 1);
-                    }
-                    if (possibleNums.length == 0) { // failed.
-                        console.log("failed");
-                        this.generate();
-                        break;
-                    }
+    flip(data){
+        //flips random rows and columns in same group
+        let flips = Math.round(Math.random() * 25 + 75);
+        for (let i = 0; i < flips; i++) {
+            //row or column?
+            let RowOrCol = Math.round(Math.random());
+            //which group?
+            let group = Math.round(Math.random() * 2);
+            //which in group?
+            let one = Math.round(Math.random()*2);
+            let two = one;
+            while (two == one) {
+                two = Math.round(Math.random()*2);
+            }
+            //do the flip!
+            if (RowOrCol == 1){
+                //flip row
+                let tempArr = data[one + 3*group];
+                data[one + 3*group] = data[two + 3*group];
+                data[two + 3*group] = tempArr;
+            }
+            else {
+                //flip col
+                for (let i = 0; i < data.length; i++){
+                    //flip one number at a time in column
+                    let temp = data[i][one + 3*group];
+                    data[i][one + 3*group] = data[i][two + 3*group];
+                    data[i][two + 3*group] = temp;
                 }
             }
         }
     }
-
-    // validRow(data){
-    //     sumRows = 0;
-    //     for (let j = 0; j < this.data.length; j++) {
-    //         sumRows += this.data[j];
-    //             this.data[i].push(j);
-    //         }
-    //         this.shuffle(this.data[i]);
-    //     }
-    //     return (sumRows == 45);
-    // }
+   
+    rotate(array, num){
+        let len = array.length;
+        let newArr = [];
+        newArr.length = len;
+        for (let i = 0; i < len; i++) {
+            let index = i + num;
+            if (index >= len){
+                index -= len;
+            }
+            newArr[index] = array[i];
+        }
+        return newArr;
+    }
 
     valid(data){
         let row = [0,0,0,0,0,0,0,0,0];
@@ -59,7 +83,6 @@ class Board {
             for (let j = 0; j < this.data[i].length; j++) {
                 row[this.data[i][j]] += 1;
                 col[this.data[j][i]] += 1;
-                // box[this.data[][]]
             }
             valid = (!row.includes(2) && !col.includes(2));
             if (!valid){
@@ -72,19 +95,15 @@ class Board {
                 box = [0,0,0,0,0,0,0,0,0];
                 for (let ii = 0; ii < 3; ii++) {
                     for (let jj = 0; jj < 3; jj++) {
-                        // sumBox += data[i*3][j];
-                        // sumBox += data[i*3 + 1][j];
-                        // sumBox += data[i*3 + 2][j];
                         box[this.data[i*3 + ii][j*3 + jj]] += 1;
                     }
                 }
-                valid = (!box.includes(2));
+                valid = (!box.includes(2) && !box.includes(3));
                 if (!valid){
                     return false;
                 }
             }
         }
-        valid = (sumBox == 45);
         return valid;
     }
 
