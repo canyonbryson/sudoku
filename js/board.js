@@ -51,26 +51,38 @@ class Board {
     // }
 
     valid(data){
-        let sumRows = 0;
-        let sumCol = 0;
+        row = [0,0,0,0,0,0,0,0,0];
+        col = [0,0,0,0,0,0,0,0,0];
         let valid = true;
         for (let i = 0; i < this.data.length; i++) {
-            sumRows = 0;
-            sumCol = 0;
+            row = [0,0,0,0,0,0,0,0,0];
+            col = [0,0,0,0,0,0,0,0,0];
             for (let j = 0; j < this.data[i].length; j++) {
-                sumRows += this.data[i][j];
-                sumCols += this.data[j][i];
+                row[this.data[i][j]] += 1;
+                col[this.data[j][i]] += 1;
+                // box[this.data[][]]
             }
-            valid = (sumRows == 45 && sumCol == 45);
-            sumRows = 0;
-            sumCol = 0;
+            valid = (!row.includes(2) && !col.includes(2));
+            if (!valid){
+                return valid;
+            }
         }
-        let sumBox = 0;
+        box = [0,0,0,0,0,0,0,0,0];
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                sumBox += data[i*3][j];
-                sumBox += data[i*3 + 1][j];
-                sumBox += data[i*3 + 2][j];
+                box = [0,0,0,0,0,0,0,0,0];
+                for (let ii = 0; ii < 3; ii++) {
+                    for (let jj = 0; jj < 3; jj++) {
+                        // sumBox += data[i*3][j];
+                        // sumBox += data[i*3 + 1][j];
+                        // sumBox += data[i*3 + 2][j];
+                        box[this.data[i*3 + ii][j*3 + jj]] += 1;
+                    }
+                }
+                valid = (!box.includes(2));
+                if (!valid){
+                    return false;
+                }
             }
         }
         valid = (sumBox == 45);
