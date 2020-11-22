@@ -4,7 +4,8 @@ class Board {
         let valid = false;
         while (!valid) {
             this.generate();
-            valid = this.valid(this.data);
+            valid = true;
+            // valid = this.valid(this.data);
         }
     }
 
@@ -71,6 +72,7 @@ class Board {
                 safe.push(i + 1);
             }
         }
+        debugger
         
         // loop through all safe numbers
         //      choose random element from safe numbers
@@ -83,7 +85,7 @@ class Board {
             let result = this.pick_next_cell(tempData);
             if (result.result) {
                 return {
-                    data: tempData,
+                    data: result.data,
                     result: true
                 };
             }
@@ -135,8 +137,10 @@ class Board {
             row = [0,0,0,0,0,0,0,0,0];
             col = [0,0,0,0,0,0,0,0,0];
             for (let j = 0; j < this.data[i].length; j++) {
-                row[this.data[i][j]] += 1;
-                col[this.data[j][i]] += 1;
+                if (this.data[i][j] != 0)
+                    row[this.data[i][j] - 1] += 1;
+                if (this.data[j][i] != 0)
+                    col[this.data[j][i] - 1] += 1;
             }
             valid = (!row.includes(2) && !col.includes(2));
             if (!valid){
@@ -149,7 +153,7 @@ class Board {
                 box = [0,0,0,0,0,0,0,0,0];
                 for (let ii = 0; ii < 3; ii++) {
                     for (let jj = 0; jj < 3; jj++) {
-                        box[this.data[i*3 + ii][j*3 + jj]] += 1;
+                        box[this.data[i*3 + ii][j*3 + jj] - 1] += 1;
                     }
                 }
                 valid = (!box.includes(2) && !box.includes(3));
