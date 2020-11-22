@@ -14,22 +14,40 @@ class Board {
     }
 
     generate() {
+        this.data = [];
         for (let i = 0; i < 9; i++) {
             this.data[i] = [];
             for (let j = 0; j < 9; j++) {
-                this.data[i].push(j + 1);
+                let possibleNums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                while (true) {
+                    let rand = Math.floor(Math.random() * possibleNums.length);
+                    let isValid = true;
+                    if (isValid) {
+                        this.data[i][j] = possibleNums[rand];
+                        break;
+                    } else {
+                        possibleNums = possibleNums.splice(rand, 1);
+                    }
+                    if (possibleNums.length == 0) { // failed.
+                        console.log("failed");
+                        this.generate();
+                        break;
+                    }
+                }
             }
-            this.shuffle(data[i]);
         }
     }
 
-    validRow(data){
-        row = [0,0,0,0,0,0,0,0,0];
-        for (let j = 0; j < this.data.length; j++) {
-                row[this.data[j]] += 1;
-            }
-        return (!row.includes(2));
-    }
+    // validRow(data){
+    //     sumRows = 0;
+    //     for (let j = 0; j < this.data.length; j++) {
+    //         sumRows += this.data[j];
+    //             this.data[i].push(j);
+    //         }
+    //         this.shuffle(this.data[i]);
+    //     }
+    //     return (sumRows == 45);
+    // }
 
     valid(data){
         row = [0,0,0,0,0,0,0,0,0];
@@ -106,7 +124,7 @@ function line(ctx, x1, y1, x2, y2, num) {
 
 function draw_text(ctx, text, x, y) {
     ctx.beginPath();
-    ctx.fillText(text, x, y);
+    ctx.fillText(text, x, y + 4);
     ctx.closePath();
 }
 
