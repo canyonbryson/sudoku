@@ -26,13 +26,16 @@ class Board {
     backtrack(data){
         // assign zeros to all cells
         // randomly generate 3 groups
-        let data = this.pick_next_cell();
-        return data;
+        let newData = this.pick_next_cell(data);
+        if (newData.result) {
+            return newData.data;
+        }
+        return false;
     }
 
     pick_next_cell(data) {
         // duplicate data array
-        let tempData = data;
+        let tempData = data.map((x) => x);
 
         // find next empty cell
         // if no empty cells, return data
@@ -49,17 +52,45 @@ class Board {
             }
         }
         if (empty == [-1, -1]) {
-            return tempData;
+            return {
+                data: tempData,
+                result: true
+            };
         }
 
         // initalize empty safe array
+        let safe = [];
         // for loop 0-8
         //      assign next empty cell each number
         //      append number to safe array if new grid is valid
+        for (let i = 0; i < 9; i++) {
+            tempData[empty[0]][empty[1]] = i + 1;
+            if (this.valid(tempData)) {
+                safe.push(i + 1);
+            }
+        }
         
         // loop through all safe numbers
+        //      choose random element from safe numbers
         //      recursively call pick_next_cell() for each safe number
         //      if any call returns true, return data
+        while (safe.length > 0) {
+            let rand = Math.floor(Math.random() * safe.length);
+            let numToCheck = safe.splice(rand, 1);
+            let result = this.pick_next_cell(tempData);
+            if (result.result) {
+                return {
+                    data: tempData,
+                    result: true
+                };
+            }
+        }
+
+        // failed
+        return {
+            data: tempData,
+            result: false
+        };
 
     }
 
