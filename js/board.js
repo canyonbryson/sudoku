@@ -11,10 +11,12 @@ class Board {
     generate(){
         let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         this.shuffle(nums);
-        for (let i = 0; i < 9; i++) {
-            this.data[i] = this.rotate(nums, 3*(i%3) + Math.floor(i/3));
-        }
-        this.flip(this.data);
+        //add to group 1, 5, 9
+        this.backtrack(this.data);
+    }
+
+    backtrack(data){
+        //backtracking
     }
 
     shuffle(array) {
@@ -26,52 +28,6 @@ class Board {
           }
     }
 
-    flip(data){
-        //flips random rows and columns in same group
-        let flips = Math.round(Math.random() * 25 + 75);
-        for (let i = 0; i < flips; i++) {
-            //row or column?
-            let RowOrCol = Math.round(Math.random());
-            //which group?
-            let group = Math.round(Math.random() * 2);
-            //which in group?
-            let one = Math.round(Math.random()*2);
-            let two = one;
-            while (two == one) {
-                two = Math.round(Math.random()*2);
-            }
-            //do the flip!
-            if (RowOrCol == 1){
-                //flip row
-                let tempArr = data[one + 3*group];
-                data[one + 3*group] = data[two + 3*group];
-                data[two + 3*group] = tempArr;
-            }
-            else {
-                //flip col
-                for (let i = 0; i < data.length; i++){
-                    //flip one number at a time in column
-                    let temp = data[i][one + 3*group];
-                    data[i][one + 3*group] = data[i][two + 3*group];
-                    data[i][two + 3*group] = temp;
-                }
-            }
-        }
-    }
-   
-    rotate(array, num){
-        let len = array.length;
-        let newArr = [];
-        newArr.length = len;
-        for (let i = 0; i < len; i++) {
-            let index = i + num;
-            if (index >= len){
-                index -= len;
-            }
-            newArr[index] = array[i];
-        }
-        return newArr;
-    }
 
     valid(data){
         let row = [0,0,0,0,0,0,0,0,0];
