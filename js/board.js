@@ -41,7 +41,7 @@ class Board {
         // if no empty cells, return data
         let empty = [-1, -1];
         for (let i = 0; i < tempData.length; i++) {
-            for (let j = 0; j < tempData.length; j++) {
+            for (let j = 0; j < tempData[i].length; j++) {
                 if (tempData[i][j] == 0) {
                     empty = [i, j];
                     break;
