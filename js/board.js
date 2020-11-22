@@ -17,21 +17,49 @@ class Board {
         for (let i = 0; i < 9; i++) {
             this.data[i] = [];
             for (let j = 0; j < 9; j++) {
+                this.data[i].push(j + 1);
+            }
+            this.shuffle(data[i]);
+        }
+    }
+
+    validRow(data){
+        sumRows = 0;
+        for (let j = 0; j < this.data.length; j++) {
+            sumRows += this.data[j];
                 this.data[i].push(j);
             }
             this.shuffle(this.data[i]);
         }
+        return (sumRows == 45);
     }
 
-    // validate(data){
-    //     for (let i = 0; i < this.data.length; i++) {
-    //         this.data[i] = [];
-    //         for (let j = 0; j < this.data[i].length; j++) {
-    //             this.data[i].push(j);
-    //         }
-    //         shuffle(data[i]);
-    //     }
-    // }
+    valid(data){
+        let sumRows = 0;
+        let sumCol = 0;
+        let valid = true;
+        for (let i = 0; i < this.data.length; i++) {
+            sumRows = 0;
+            sumCol = 0;
+            for (let j = 0; j < this.data[i].length; j++) {
+                sumRows += this.data[i][j];
+                sumCols += this.data[j][i];
+            }
+            valid = (sumRows == 45 && sumCol == 45);
+            sumRows = 0;
+            sumCol = 0;
+        }
+        let sumBox = 0;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                sumBox += data[i*3][j];
+                sumBox += data[i*3 + 1][j];
+                sumBox += data[i*3 + 2][j];
+            }
+        }
+        valid = (sumBox == 45);
+        return valid;
+    }
 
     draw(ctx) {
         let cellSize = Math.floor(Math.min(ctx.canvas.width - 18, ctx.canvas.height - 18) / 9);
