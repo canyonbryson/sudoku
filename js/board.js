@@ -20,7 +20,7 @@ class Board {
         this.shuffle(nums);
         this.addToGroup(this.data, nums, 5);
         this.shuffle(nums);
-        this.addToGroup(this.data, nums, 9);
+        this.addToGroup(this.data, nums, 9);    //Fill groups 1, 5, 9 with random integers, have our algorithm solve the rest
         this.data = this.backtrack(this.data);
     }
 
