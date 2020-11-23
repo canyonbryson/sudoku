@@ -3,6 +3,7 @@ class Board {
     constructor() {
         this.data = [];
         this.original;
+        this.attempts = 0;
         this.generate();
     }
 
@@ -95,10 +96,14 @@ class Board {
         }
         tempData[row][col] = 0; // clear cell
 
+        this.attempts += 1;
         let result = this.isNewSolution(tempData);
         if (!result.result) { // if no new solution
             return this.remove_cell(tempData);
-        } else {
+        } else if(this.attempts < 80) {
+            return this.remove_cell(data);
+        }
+        else {
             return data;
         }
     }
