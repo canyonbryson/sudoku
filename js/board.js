@@ -1,8 +1,9 @@
 
 class Board {
-    constructor() {
+    constructor(difficulty) {
         this.data = [];
         this.original;
+        this.difficulty = difficulty;
         this.attempts = 0;
         this.generate();
     }
@@ -100,7 +101,7 @@ class Board {
         let result = this.isNewSolution(tempData);
         if (!result.result) { // if no new solution
             return this.remove_cell(tempData);
-        } else if(this.attempts < 80) {
+        } else if(this.attempts < this.difficulty) {
             return this.remove_cell(data);
         }
         else {
