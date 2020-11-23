@@ -1,8 +1,71 @@
+var solution_count = 0;
 
 class Board {
     constructor() {
         this.data = [];
         this.generate();
+    }
+
+    solve(grid) {
+        let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        for (let i = 0; i < 81; i++) {
+            let col = i % 9;
+            let row = (i - col) / 9;
+
+            if (grid[row][col] == 0) {
+                this.shuffle(numbers);
+                for (let j = 0; j < numbers.length; j++) {
+                    if (!grid[row].includes(numbers[j])) {
+                        let failsColumnCheck = false;
+                        for (let k = 0; k < 9; k++) {
+                            if (grid[k][col] == numbers[j]) {
+                                failsColumnCheck = true;
+                                break;
+                            }
+                        }
+                        if (!failsColumnCheck) {
+                            let groupCol = Math.floor(col / 3) * 3;
+                            let groupRow = Math.floor(row / 3) * 3;
+                            let failsGroupCheck = false;
+                            for (let k = 0; k < 9; k++) {
+                                let cc = k % 3;
+                                let rr = (k - cc) / 3;
+                                console.log(col, row, groupRow, groupCol, cc, rr, j);
+                                if (grid[groupRow + rr][groupCol + cc] == numbers[j]) {
+                                    failsGroupCheck = true;
+                                    break;
+                                }
+                            }
+                            if (!failsGroupCheck) {
+                                grid[row][col] = numbers[j];
+                                if (this.isFull(grid)) {
+                                    solution_count++;
+                                    break;
+                                } else {
+                                    if (this.solve(grid)) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+                break;
+            }
+            grid[row][col] = 0;
+        }
+    }
+
+    isFull(grid) {
+        for (let i = 0; i < 81; i++) {
+            let col = i % 9;
+            let row = (i - col) / 9;
+            if (grid[row][col] == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     generate(){
@@ -95,12 +158,12 @@ class Board {
             }
         }
         tempData[row][col] = 0; // clear cell
-        let result_bottom_up = this.pick_next_cell(tempData, true); // check for inconsistent solutions
-        let result_top_down = this.pick_next_cell(tempData, false);
-        if (this.compare_array(result_bottom_up.data, result_top_down.data)) { // if solutions are equal
-            return this.remove_cell(tempData);
-        } else {
+        solution_count = 0;
+        this.solve(tempData);
+        if (solution_count != 1) {
             return data;
+        } else {
+            return this.remove_cell(tempData);
         }
     }
 
