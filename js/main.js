@@ -6,6 +6,8 @@ window.onload = function() {
     var ctx = cvs.getContext('2d');
     var board = new Board();
     board.draw(ctx);
-    console.log(board.data);
+
+    var solver = new Solver(board);
+    console.log(solver.solve(board.data));
 
 };
