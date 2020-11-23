@@ -1,3 +1,5 @@
+var count = 0;
+
 class Board {
     constructor() {
         this.data = [];
@@ -7,6 +9,7 @@ class Board {
             valid = true;
             // valid = this.valid(this.data);
         }
+        console.log(count);
     }
 
     generate(){
@@ -22,23 +25,25 @@ class Board {
         this.shuffle(nums);
         this.addToGroup(this.data, nums, 9);
         this.data = this.backtrack(this.data);
+        console.log(this.clone_array(this.data));
+        this.data = this.remove_cell(this.data);
     }
 
     backtrack(data){
         // assign zeros to all cells
         // randomly generate 3 groups
         console.log("foo", data);
-        let newData = this.pick_next_cell(data);
+        let newData = this.pick_next_cell(data, true);
         if (newData.result) {
             return newData.data;
         }
         return false;
     }
 
-    pick_next_cell(data) {
+    pick_next_cell(data, bottom_up) {
+        count++;
         // duplicate data array
         let tempData = this.clone_array(data);
-        console.log(tempData);
 
         // find next empty cell
         // if no empty cells, return data
@@ -78,7 +83,11 @@ class Board {
         //      recursively call pick_next_cell() for each safe number
         //      if any call returns true, return data
         while (safe.length > 0) {
-            let rand = Math.floor(Math.random() * safe.length);
+            let rand = 0;
+            if (!bottom_up) {
+                rand = safe.length - 1;
+            }
+            // let rand = Math.floor(Math.random() * safe.length);
             let numToCheck = safe.splice(rand, 1)[0];
             tempData[empty[0]][empty[1]] = numToCheck;
             let result = this.pick_next_cell(tempData);
@@ -98,6 +107,28 @@ class Board {
 
     }
 
+    remove_cell(data) {
+        let tempData = this.clone_array(data);
+        let isZero = true;
+        let row = -1;
+        let col = -1;
+        while (isZero) {
+            row = Math.floor(Math.random() * 9);
+            col = Math.floor(Math.random() * 9);
+            if (tempData[row][col] != 0) {
+                isZero = false;
+            }
+        }
+        tempData[row][col] = 0;
+        let result_bottom_up = this.pick_next_cell(tempData, true);
+        let result_top_down = this.pick_next_cell(tempData, false);
+        if (this.compare_array(result_bottom_up.data, result_top_down.data)) {
+            return this.remove_cell(tempData);
+        } else {
+            return data;
+        }
+    }
+
     clone_array(array) {
         let newArray = [];
         for (let i = 0; i < array.length; i++) {
@@ -107,6 +138,10 @@ class Board {
             }
         }
         return newArray;
+    }
+
+    compare_array(array1, array2) {
+        return (JSON.stringify(array1) == JSON.stringify(array2));
     }
 
     shuffle(array) {
@@ -177,7 +212,9 @@ class Board {
         set_font(ctx, cellSize);
         for (let i = 0; i < this.data.length; i++) {
             for (let j = 0; j < this.data[i].length; j++) {
-                draw_text(ctx, this.data[j][i], origX + cellSize * i + cellSize * 0.5, origY + cellSize * j + cellSize * 0.5);
+                if (this.data[j][i] != 0) {
+                    draw_text(ctx, this.data[j][i], origX + cellSize * i + cellSize * 0.5, origY + cellSize * j + cellSize * 0.5);
+                }
             }
         }
     }
