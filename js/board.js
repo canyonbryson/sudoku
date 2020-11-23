@@ -1,47 +1,31 @@
-var count = 0;
 
 class Board {
     constructor() {
         this.data = [];
-        let valid = false;
-        while (!valid) {
-            this.generate();
-            valid = true;
-            // valid = this.valid(this.data);
-        }
-        console.log(count);
+        this.generate();
     }
 
     generate(){
-        this.data.length = 9;
         for (let i = 0; i < 9; i++){
-            this.data[i] = [0,0,0,0,0,0,0,0,0];
+            this.data.push([0,0,0,0,0,0,0,0,0]);
         }
+
         let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        this.shuffle(nums);
-        this.addToGroup(this.data, nums, 1);
-        this.shuffle(nums);
-        this.addToGroup(this.data, nums, 5);
-        this.shuffle(nums);
-        this.addToGroup(this.data, nums, 9);
-        this.data = this.backtrack(this.data);
-        console.log(this.clone_array(this.data));
-        this.data = this.remove_cell(this.data);
+
+        for (let i = 1; i < 10; i += 4) { // create & randomize groups 1, 5, and 9
+            this.shuffle(nums);
+            this.addToGroup(this.data, nums, i);
+        }
+
+        this.data = this.backtrack(this.data); // recursively solve board
+        this.data = this.remove_cell(this.data); // recursively remove numbers from board
     }
 
     backtrack(data){
-        // assign zeros to all cells
-        // randomly generate 3 groups
-        console.log("foo", data);
-        let newData = this.pick_next_cell(data, true);
-        if (newData.result) {
-            return newData.data;
-        }
-        return false;
+        return this.pick_next_cell(data, true).data; // call recursive function
     }
 
     pick_next_cell(data, bottom_up) {
-        count++;
         // duplicate data array
         let tempData = this.clone_array(data);
 
@@ -52,14 +36,12 @@ class Board {
             for (let j = 0; j < tempData[i].length; j++) {
                 if (tempData[i][j] == 0) {
                     empty = [i, j];
+                    i = 10; // get out of both for loops
                     break;
                 }
             }
-            if (empty[0] != -1 && empty[1] != -1) {
-                break;
-            }
         }
-        if (empty[0] == -1 && empty[1] == -1) {
+        if (empty[0] == -1 && empty[1] == -1) { // if all cells are filled, return the result
             return {
                 data: tempData,
                 result: true
@@ -68,30 +50,22 @@ class Board {
 
         // initalize empty safe array
         let safe = [];
-        // for loop 0-8
-        //      assign next empty cell each number
-        //      append number to safe array if new grid is valid
         for (let i = 0; i < 9; i++) {
-            tempData[empty[0]][empty[1]] = i + 1;
-            if (this.valid(tempData)) {
+            tempData[empty[0]][empty[1]] = i + 1; // put each number 1-9 in first empty cell
+            if (this.valid(tempData)) { // if the grid is still valid, add that number to the array of safe numbers
                 safe.push(i + 1);
             }
         }
         
-        // loop through all safe numbers
-        //      choose random element from safe numbers
-        //      recursively call pick_next_cell() for each safe number
-        //      if any call returns true, return data
-        while (safe.length > 0) {
-            let rand = 0;
-            if (!bottom_up) {
-                rand = safe.length - 1;
+        while (safe.length > 0) { // loop through all safe numbers
+            let index = 0;
+            if (!bottom_up) { // choose which safe number to check
+                index = safe.length - 1;
             }
-            // let rand = Math.floor(Math.random() * safe.length);
-            let numToCheck = safe.splice(rand, 1)[0];
-            tempData[empty[0]][empty[1]] = numToCheck;
-            let result = this.pick_next_cell(tempData);
-            if (result.result) {
+            let numToCheck = safe.splice(index, 1)[0];
+            tempData[empty[0]][empty[1]] = numToCheck; // set found empty cell to the first/last safe number
+            let result = this.pick_next_cell(tempData); // recursively call to fill next cell
+            if (result.result) { // if returned successfully, return the new array
                 return {
                     data: result.data,
                     result: true
@@ -99,7 +73,8 @@ class Board {
             }
         }
 
-        // failed
+        // failed to find a valid solution
+        // should never get to this point
         return {
             data: tempData,
             result: false
@@ -112,17 +87,17 @@ class Board {
         let isZero = true;
         let row = -1;
         let col = -1;
-        while (isZero) {
+        while (isZero) { // find a random filled cell
             row = Math.floor(Math.random() * 9);
             col = Math.floor(Math.random() * 9);
             if (tempData[row][col] != 0) {
                 isZero = false;
             }
         }
-        tempData[row][col] = 0;
-        let result_bottom_up = this.pick_next_cell(tempData, true);
+        tempData[row][col] = 0; // clear cell
+        let result_bottom_up = this.pick_next_cell(tempData, true); // check for inconsistent solutions
         let result_top_down = this.pick_next_cell(tempData, false);
-        if (this.compare_array(result_bottom_up.data, result_top_down.data)) {
+        if (this.compare_array(result_bottom_up.data, result_top_down.data)) { // if solutions are equal
             return this.remove_cell(tempData);
         } else {
             return data;
@@ -154,7 +129,6 @@ class Board {
     }
 
     addToGroup(data, list, group) {
-        // group - 1 % 3 = 0 1 2, * floor(group / 3)
         for (let i = 0; i < 3; i++){
             let g = Math.floor((group - 1)/3) * 3; //Start at row 0, 3, 6
             data[g + i][g] = list[i];
@@ -164,39 +138,35 @@ class Board {
     }
 
     valid(data){
-        let row = [0,0,0,0,0,0,0,0,0];
-        let col = [0,0,0,0,0,0,0,0,0];
-        let valid = true;
-        for (let i = 0; i < data.length; i++) {
-            row = [0,0,0,0,0,0,0,0,0];
-            col = [0,0,0,0,0,0,0,0,0];
+        for (let i = 0; i < data.length; i++) { // check if all rows & columns are valid
+            let row = [0,0,0,0,0,0,0,0,0];
+            let col = [0,0,0,0,0,0,0,0,0];
             for (let j = 0; j < data[i].length; j++) {
                 if (data[i][j] != 0)
                     row[data[i][j] - 1] += 1;
                 if (data[j][i] != 0)
                     col[data[j][i] - 1] += 1;
             }
-            valid = (!row.includes(2) && !col.includes(2));
-            if (!valid){
-                return valid;
+            if (row.includes(2) || col.includes(2)){
+                return false;
             }
         }
-        let box = [0,0,0,0,0,0,0,0,0];
-        for (let i = 0; i < 3; i++) {
+
+        for (let i = 0; i < 3; i++) { // check if all groups are valid
             for (let j = 0; j < 3; j++) {
-                box = [0,0,0,0,0,0,0,0,0];
+                let box = [0,0,0,0,0,0,0,0,0];
                 for (let ii = 0; ii < 3; ii++) {
                     for (let jj = 0; jj < 3; jj++) {
                         box[data[i*3 + ii][j*3 + jj] - 1] += 1;
                     }
                 }
-                valid = (!box.includes(2) && !box.includes(3));
-                if (!valid){
+                if (box.includes(2) || box.includes(3)) {
                     return false;
                 }
             }
         }
-        return valid;
+
+        return true;
     }
 
     draw(ctx) {
@@ -221,30 +191,3 @@ class Board {
 
 }
 
-function line(ctx, x1, y1, x2, y2, num) {
-    if (num % 3 == 0) {
-        ctx.lineWidth = 3;
-    } else {
-        ctx.lineWidth = 1;
-    }
-    ctx.beginPath();
-    ctx.strokeStyle = "black";
-    ctx.moveTo(Math.round(x1), Math.round(y1));
-    ctx.lineTo(Math.round(x2), Math.round(y2));
-    ctx.stroke();
-    ctx.closePath();
-}
-
-function draw_text(ctx, text, x, y) {
-    ctx.beginPath();
-    ctx.fillText(text, x, y + 4);
-    ctx.closePath();
-}
-
-function set_font(ctx, cellSize) {
-    let size = Math.round(cellSize * 0.75);
-    ctx.font = size + "px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "black";
-}
