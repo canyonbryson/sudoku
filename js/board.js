@@ -1,20 +1,148 @@
 class Board {
     constructor() {
         this.data = [];
+<<<<<<< Updated upstream
         let valid = false;
         while (!valid) {
             this.generate();
             valid = this.valid(this.data);
         }
+=======
+        this.count = 0;
+        this.generate();
+>>>>>>> Stashed changes
     }
 
     generate(){
         let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+<<<<<<< Updated upstream
         this.shuffle(nums);
+=======
+
+        for (let i = 1; i < 10; i += 4) { // create & randomize groups 1, 5, and 9
+            this.shuffle(nums);
+            this.addToGroup(this.data, nums, i);
+        }
+        this.data = this.backtrack(this.data); // recursively solve board
+        this.data = this.remove_cell(this.data); // recursively remove numbers from board
+    }
+
+    backtrack(data){
+        return this.pick_next_cell(data, false).data; // call recursive function
+    }
+
+    pick_next_cell(data, testing) {
+        // duplicate data array
+        let tempData = this.clone_array(data);
+
+        // find next empty cell
+        // if no empty cells, return data
+        let empty = [-1, -1];
+        for (let i = 0; i < tempData.length; i++) {
+            for (let j = 0; j < tempData[i].length; j++) {
+                if (tempData[i][j] == 0) {
+                    empty = [i, j];
+                    i = 10; // get out of both for loops
+                    break;
+                }
+            }
+        }
+        if (empty[0] == -1 && empty[1] == -1) { // if all cells are filled, return the result
+            return {
+                data: tempData,
+                result: true
+            };
+        }
+
+        // initalize empty safe array
+        let safe = [];
+>>>>>>> Stashed changes
         for (let i = 0; i < 9; i++) {
             this.data[i] = this.rotate(nums, 3*(i%3) + Math.floor(i/3));
         }
+<<<<<<< Updated upstream
         this.flip(this.data);
+=======
+        
+        while (safe.length > 0) { // loop through all safe numbers
+            let index = 0;
+            // if (!bottom_up) { // choose which safe number to check
+            //     index = safe.length - 1;
+            // }
+            let numToCheck = safe.splice(index, 1)[0];
+            tempData[empty[0]][empty[1]] = numToCheck; // set found empty cell to the first/last safe number
+            let result = this.pick_next_cell(tempData); // recursively call to fill next cell
+            if (result.result) { // if returned successfully, return the new array
+                if (testing) {
+                    // debugger
+                    this.count += 1;
+                    // return {
+                    //     testing: true
+                    // };
+
+                } else {
+                    return {
+                        data: result.data,
+                        result: true
+                    };
+                }
+            }
+        }
+
+        // failed to find a valid solution
+        // should never get to this point
+        if (this.count==1){
+            return {
+                    testing: true
+                };
+        }
+        return {
+            testing: false
+        };
+    }
+
+    remove_cell(data) {
+        let tempData = this.clone_array(data);
+        let isZero = true;
+        let row = -1;
+        let col = -1;
+        while (isZero) { // find a random filled cell
+            row = Math.floor(Math.random() * 9);
+            col = Math.floor(Math.random() * 9);
+            if (tempData[row][col] != 0) {
+                isZero = false;
+            }
+        }
+        tempData[row][col] = 0; // clear cell
+        // let result_bottom_up = this.pick_next_cell(tempData, true); // check for inconsistent solutions
+        // let result_top_down = this.pick_next_cell(tempData, false);
+        if (this.pick_next_cell(tempData, true).testing) {
+            if (this.count <= 1) {
+                this.count = 0;
+                return this.remove_cell(tempData);
+            } else {
+                return data;
+            }
+        } 
+        else {
+            return data;
+        }
+    }
+
+    clone_array(array) {
+        let newArray = [];
+        for (let i = 0; i < 9; i++) {
+            newArray.push([]);
+            for (let j = 0; j < 9; j++) {
+                newArray[i].push(array[i][j]);
+            }
+        }
+        return newArray;
+    }
+
+    compare_array(array1, array2) {
+        return (JSON.stringify(array1) == JSON.stringify(array2));
+>>>>>>> Stashed changes
     }
 
     shuffle(array) {
