@@ -14,8 +14,8 @@ window.onload = function() {
         difficulty = parseInt(slider.value);
     };
     
-    var button = document.getElementById("btnGenerate");
-    button.addEventListener("click", function() {
+    var button1 = document.getElementById("btnGenerate");
+    button1.addEventListener("click", function() {
         ctx.clearRect(0, 0, cvs.width, cvs.height);
         board = new Board(difficulty);
         board.draw(ctx);
@@ -28,4 +28,12 @@ window.onload = function() {
         board.draw(ctx);
         $("#btnSolution").toggle();
     });
+
+    // var button2 = document.getElementById("btnSubmit");
+    // button2.addEventListener("click", function() {
+    //     //read the board
+    //     //compare board to board.original
+    // });
+
+    // User Input?
 };
