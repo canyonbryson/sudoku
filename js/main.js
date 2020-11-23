@@ -19,6 +19,13 @@ window.onload = function() {
         ctx.clearRect(0, 0, cvs.width, cvs.height);
         board = new Board(difficulty);
         board.draw(ctx);
-        // console.log(board.data);
+        $("#btnSolution").show();
+    });
+
+    document.querySelector("#btnSolution").addEventListener("click", function() {
+        board.data = board.original;
+        ctx.clearRect(0, 0, cvs.width, cvs.height);
+        board.draw(ctx);
+        $("#btnSolution").toggle();
     });
 };
