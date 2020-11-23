@@ -2,6 +2,7 @@
 class Board {
     constructor() {
         this.data = [];
+        this.original;
         this.generate();
     }
 
@@ -18,14 +19,15 @@ class Board {
         }
 
         this.data = this.backtrack(this.data); // recursively solve board
+        this.original = this.clone_array(this.data);
         this.data = this.remove_cell(this.data); // recursively remove numbers from board
     }
 
     backtrack(data){
-        return this.pick_next_cell(data, true).data; // call recursive function
+        return this.pick_next_cell(data).data; // call recursive function
     }
 
-    pick_next_cell(data, bottom_up) {
+    pick_next_cell(data) {
         // duplicate data array
         let tempData = this.clone_array(data);
 
@@ -59,9 +61,6 @@ class Board {
         
         while (safe.length > 0) { // loop through all safe numbers
             let index = 0;
-            if (!bottom_up) { // choose which safe number to check
-                index = safe.length - 1;
-            }
             let numToCheck = safe.splice(index, 1)[0];
             tempData[empty[0]][empty[1]] = numToCheck; // set found empty cell to the first/last safe number
             let result = this.pick_next_cell(tempData); // recursively call to fill next cell
@@ -95,13 +94,63 @@ class Board {
             }
         }
         tempData[row][col] = 0; // clear cell
-        let result_bottom_up = this.pick_next_cell(tempData, true); // check for inconsistent solutions
-        let result_top_down = this.pick_next_cell(tempData, false);
-        if (this.compare_array(result_bottom_up.data, result_top_down.data)) { // if solutions are equal
+        
+        let result = this.isNewSolution(tempData);
+        if (!result.result) { // if no new solution
             return this.remove_cell(tempData);
         } else {
             return data;
         }
+    }
+
+    isNewSolution(data) {
+        let tempData = this.clone_array(data);
+        // call pick next cell with this numbers being different in the safe array
+
+        //for each empty cell
+        let empty = [-1, -1];
+        for (let i = 0; i < tempData.length; i++) {
+            for (let j = 0; j < tempData[i].length; j++) {
+                if (tempData[i][j] == 0) {
+                    empty = [i, j];
+                    i = 10;                                         // get out of both for loops
+                    break;
+                }
+            }
+        }
+        if (empty[0] == -1 && empty[1] == -1) {                     // if all cells are filled, return the result
+            return {
+                data: tempData,
+                result: true
+            };
+        }
+        //fill it with every safe solution
+        let safe = [];                                              // initalize empty safe array
+        for (let i = 0; i < 9; i++) {
+            tempData[empty[0]][empty[1]] = i + 1;                   // put each number 1-9 in first empty cell
+            if (this.valid(tempData)) {                             // if the grid is still valid, add that number to the array of safe numbers
+                safe.push(i + 1);
+            }
+        }
+        let result;
+        // loop through all safe numbers
+        while (safe.length > 0) {
+            let index = 0;
+            let numToCheck = safe.splice(index, 1)[0];
+            tempData[empty[0]][empty[1]] = numToCheck;              // set found empty cell to the first/last safe number
+            result = this.pick_next_cell(tempData);                // recursively call to fill next cell
+
+            //if returns same solution then good, return result: false
+             if (!this.compare_array(result.data, this.original)) {                                
+                 return {
+                    result: true
+                };
+            }                                                      
+        }
+        return {
+            result: false
+        };
+        
     }
 
     clone_array(array) {
