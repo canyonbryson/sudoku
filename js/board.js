@@ -221,6 +221,14 @@ class Board {
         return true;
     }
 
+    clone_array_1d(array) {
+        let newArray = [];
+        for (let i = 0; i < array.length; i++) {
+            newArray.push(array[i]);
+        }
+        return newArray;
+    }
+
     draw(ctx) {
         let cellSize = Math.floor(Math.min(ctx.canvas.width - 18, ctx.canvas.height - 18) / 9);
         let origX = Math.floor(ctx.canvas.width / 2 - cellSize * 4.5);
