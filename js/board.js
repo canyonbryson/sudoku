@@ -53,13 +53,7 @@ class Board {
         }
 
         // initalize empty safe array
-        let safe = [];
-        for (let i = 0; i < 9; i++) {
-            tempData[empty[0]][empty[1]] = i + 1; // put each number 1-9 in first empty cell
-            if (this.valid(tempData)) { // if the grid is still valid, add that number to the array of safe numbers
-                safe.push(i + 1);
-            }
-        }
+        let safe = this.find_safe_numbers(tempData, empty[0], empty[1]);
         
         while (safe.length > 0) { // loop through all safe numbers
             let index = 0;
@@ -128,13 +122,7 @@ class Board {
         for(let i = 0; i < emptyCells.length; i++){
                                                                        //fill it with every safe solution
             let empty = emptyCells[i];
-            let safe = [];                                              
-            for (let i = 0; i < 9; i++) {
-                tempData[empty[0]][empty[1]] = i + 1;                   // put each number 1-9 in first empty cell
-                if (this.valid(tempData)) {                             // if the grid is still valid, add that number to the array of safe numbers
-                    safe.push(i + 1);
-                }
-            }
+            let safe = this.find_safe_numbers(tempData, empty[0], empty[1]);
             let result;
             while (safe.length > 0) {
                 let index = 0;
@@ -219,6 +207,53 @@ class Board {
         }
 
         return true;
+    }
+
+    clone_array_1d(array) {
+        let newArray = [];
+        for (let i = 0; i < array.length; i++) {
+            newArray.push(array[i]);
+        }
+        return newArray;
+    }
+    
+    find_safe_numbers(grid, row, col, ignore = -1) {
+        let index = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        if (ignore != -1) { // ignore former content of cell
+            index[ignore - 1] = 1;
+        }
+
+        let numbers = this.clone_array_1d(grid[row]); // get numbers in row
+
+        for (let i = 0; i < 9; i++) { // get numbers in column
+            numbers.push(grid[i][col]);
+        }
+
+        // get numbers in group
+        let groupStartCol = Math.floor(col / 3) * 3;
+        let groupStartRow = Math.floor(row / 3) * 3;
+        for (let i = groupStartRow; i < groupStartRow + 3; i++) {
+            for (let j = groupStartCol; j < groupStartCol + 3; j++) {
+                numbers.push(grid[i][j]);
+            }
+        }
+
+        // count numbers and save in index
+        for (let i = 0; i < numbers.length; i++) {
+            if (numbers[i] != 0) {
+                index[numbers[i] - 1]++;
+            }
+        }
+
+        // find all indices that are zero and append to safeNums array
+        let safeNums = [];
+        for (let i = 0; i < index.length; i++) {
+            if (index[i] == 0) {
+                safeNums.push(i + 1);
+            }
+        }
+        return safeNums;
     }
 
     draw(ctx) {
