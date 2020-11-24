@@ -259,7 +259,7 @@ class Board {
     draw(ctx) {
         let cellSize = Math.floor(Math.min(ctx.canvas.width - 18, ctx.canvas.height - 18) / 9);
         let origX = Math.floor(ctx.canvas.width / 2 - cellSize * 4.5);
-        let origY = Math.floor(ctx.canvas.height / 2 - cellSize * 4.5);
+        let origY = 9;
         for (let i = 0; i < 10; i++) {
             line(ctx, origX + cellSize * i, origY, origX + cellSize * i, origY + cellSize * 9, i);
         }
