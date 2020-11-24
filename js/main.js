@@ -1,6 +1,6 @@
 window.onload = function() {
     var slider = document.getElementById("m1");
-    let difficulty = parseInt(slider.value);
+    let difficulty = get_cookie("difficulty", 1); // does not work on local files, only on www
 
     var cvs = document.querySelector("#mainCanvas");
     cvs.width = window.innerWidth;
@@ -8,19 +8,6 @@ window.onload = function() {
     var ctx = cvs.getContext('2d');
     var board = new Board(difficulty);
     board.draw(ctx);
-    console.log(board.data);
-    
-    slider.oninput = function() {
-        difficulty = parseInt(slider.value);
-    };
-    
-    var button1 = document.getElementById("btnGenerate");
-    button1.addEventListener("click", function() {
-        ctx.clearRect(0, 0, cvs.width, cvs.height);
-        board = new Board(difficulty);
-        board.draw(ctx);
-        $("#btnSolution").show();
-    });
 
     document.querySelector("#btnSolution").addEventListener("click", function() {
         board.data = board.original;
