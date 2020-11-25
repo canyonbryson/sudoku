@@ -1,7 +1,14 @@
 window.onload = function() {
-    var slider = document.getElementById("m1");
-    let difficulty = get_cookie("difficulty", 1); // does not work on local files, only on www
-
+    function getQueryString() {
+        var result = {}, queryString = location.search.slice(1),
+            re = /([^&=]+)=([^&]*)/g, m;
+        while (m = re.exec(queryString)) {
+          result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+        }
+        return result;
+    }
+      
+    var difficulty = getQueryString()["difficulty"];    // let difficulty = get_cookie("difficulty", 1); // does not work on local files, only on www
     var cvs = document.querySelector("#mainCanvas");
     cvs.width = window.innerWidth;
     cvs.height = window.innerHeight;
