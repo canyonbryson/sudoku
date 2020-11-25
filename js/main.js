@@ -9,6 +9,7 @@ window.onload = function() {
     }
       
     var difficulty = getQueryString()["difficulty"];    // let difficulty = get_cookie("difficulty", 1); // does not work on local files, only on www
+    $("#btnHome").val(difficulty);
     var cvs = document.querySelector("#mainCanvas");
     cvs.width = window.innerWidth;
     cvs.height = window.innerHeight;
@@ -16,7 +17,7 @@ window.onload = function() {
     var board = new Board(difficulty);
     board.draw(ctx);
 
-    document.querySelector("#btnSolution").addEventListener("click", function() {
+    $("#btnSolution").click(function() {
         board.data = board.original;
         ctx.clearRect(0, 0, cvs.width, cvs.height);
         board.draw(ctx);
