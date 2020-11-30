@@ -1,11 +1,16 @@
 function line(ctx, x1, y1, x2, y2, num) {
     if (num % 3 == 0) {
         ctx.lineWidth = 3;
-    } else {
+        ctx.strokeStyle = "black";
+    } else if (num == -1) {
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "blue";
+    }
+    else {
         ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
     }
     ctx.beginPath();
-    ctx.strokeStyle = "black";
     ctx.moveTo(Math.round(x1), Math.round(y1));
     ctx.lineTo(Math.round(x2), Math.round(y2));
     ctx.stroke();
@@ -13,9 +18,11 @@ function line(ctx, x1, y1, x2, y2, num) {
 }
 
 function draw_text(ctx, text, x, y) {
-    ctx.beginPath();
-    ctx.fillText(text, x, y + 4);
-    ctx.closePath();
+    if (text != 10) {
+        ctx.beginPath();
+        ctx.fillText(text, x, y + 4);
+        ctx.closePath();
+    }
 }
 
 function set_font(ctx, cellSize) {

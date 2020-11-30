@@ -17,6 +17,26 @@ window.onload = function() {
     var board = new Board(difficulty);
     board.draw(ctx);
 
+    var hCell; //the highlighted cell
+
+    window.addEventListener("click", function (e) {
+        let x = e.clientX;
+        let y = e.clientY;
+        if(board.onBoard(x, y)){
+            ctx.clearRect(0, 0, cvs.width, cvs.height);
+            board.draw(ctx);
+            hCell = board.getCell(x, y);
+            board.highlightCell(hCell, ctx);
+        }
+        else if (board.onNumbers(x, y)){
+            let num = board.getNumber(x, y);
+            board.updateCell(hCell, num, ctx);
+            ctx.clearRect(0, 0, cvs.width, cvs.height);
+            board.draw(ctx);
+            board.highlightCell(hCell, ctx);
+        }
+    });
+
     $("#btnSolution").click(function() {
         board.data = board.original;
         ctx.clearRect(0, 0, cvs.width, cvs.height);

@@ -2,6 +2,11 @@
 class Board {
     constructor(difficulty) {
         this.data = [];
+        this.cells = [];
+        this.cellSize;
+        this.origX;
+        this.origY;
+        this.numbers = [];
         this.original;
         this.difficulty = difficulty;
         this.attempts = 0;
@@ -258,8 +263,11 @@ class Board {
 
     draw(ctx) {
         let cellSize = Math.floor(Math.min(ctx.canvas.width - 18, ctx.canvas.height - 18) / 9);
+        this.cellSize = cellSize;
         let origX = Math.floor(ctx.canvas.width / 2 - cellSize * 4.5);
         let origY = 9;
+        this.origX = origX;
+        this.origY = origY;
         for (let i = 0; i < 10; i++) {
             line(ctx, origX + cellSize * i, origY, origX + cellSize * i, origY + cellSize * 9, i);
         }
@@ -274,7 +282,86 @@ class Board {
                 }
             }
         }
+        this.setCells(this.data, origX, origY, cellSize);
+        this.drawNumbers(origX, origY, ctx);
     }
 
+    onBoard(x, y) {
+        x -= this.origX;
+        y -= this.origY;
+        return x>=0 && x <= this.cellSize*9 && y>=0 && y <= this.cellSize*9;
+    }
+
+    setCells(data, X, Y, size) {
+        // initializes this.cells with each cell storing it's x and y
+        for (let i = 0; i < data.length; i++) {
+            this.cells[i] = [];
+            for (let j = 0; j < data[i].length; j++) {
+                this.cells[i][j] = [X + size*i, Y + size*j];
+            }
+        }
+    }
+
+    getCell(x, y) {
+        // returns the cell with x, y coords
+        x -= this.origX;
+        y -= this.origY;
+        let col = Math.floor(x / this.cellSize);
+        let row = Math.round(y / this.cellSize) - 1;
+        return [col, row];
+    }
+
+    highlightCell(cell, ctx) {
+        //highlights a selected cell
+        cell = this.cells[cell[0]][cell[1]];
+        line(ctx, cell[0], cell[1], cell[0] + this.cellSize, cell[1], -1);
+        line(ctx, cell[0], cell[1], cell[0], cell[1] + this.cellSize, -1);
+        line(ctx, cell[0] + this.cellSize, cell[1], cell[0] + this.cellSize, cell[1] + this.cellSize, -1);
+        line(ctx, cell[0], cell[1] + this.cellSize, cell[0] + this.cellSize, cell[1] + this.cellSize, -1);
+
+    }
+
+    updateCell(cell, num, ctx) {
+        //updates a cell with the desired number
+        this.data[cell[1]][cell[0]] = num;
+        cell = this.cells[cell[0]][cell[1]];
+        draw_text(ctx, num, cell[0] + this.cellSize * 0.5, cell[1] + this.cellSize * 0.5);
+    }
+
+    onNumbers(x, y) {
+        return !(this.getNumber(x, y) == -1);
+    }
+
+    drawNumbers(x, y, ctx) {
+        // displays 1-9, clear in cells to be selected
+        for (let i = 0; i<2; i++){
+            for (let j = 0; j<5; j++) {
+                //draw numbers
+                this.numbers[j + i*5] = [x - this.cellSize * (2 - i), y + j * this.cellSize];
+            }
+        }
+        for(let k = 1; k < 11; k++) {
+            draw_text(ctx, k, this.numbers[k-1][0] + this.cellSize * 0.5, this.numbers[k-1][1] + this.cellSize * 0.5);
+        }
+    }
+
+    getNumber(x, y) {
+        //returns which value was selected
+        y -= this.origY;
+        x -= this.numbers[0][0];
+        let col = Math.floor(x / this.cellSize);
+        let row = Math.round(y / this.cellSize);
+        if(row > 5 || col > 1 || row < 0 || col < 0){
+            return -1;
+        }
+        let num = row + col*5;
+        if (num <= 0 || num > 10){
+            return -1;
+        }
+        if (num == 10){
+            num = 0;
+        }
+        return num;
+    }
 }
 
