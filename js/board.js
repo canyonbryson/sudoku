@@ -1,15 +1,16 @@
 
 class Board {
-    constructor(difficulty) {
-        this.cells = [];
-        this.cellSize = 0;
-        this.origX = 0;
-        this.origY = 0;
-        this.numbers = [];
+    constructor(difficulty, ctx) {
+        this.ctx = ctx;
         this.difficulty = difficulty;
         this.attempts = 0;
         this.data = [];
+        this.cellSize = Math.floor(Math.min(this.ctx.canvas.width - 18, this.ctx.canvas.height - 18) / 9);
+        this.origX = Math.floor(this.ctx.canvas.width / 2 - this.cellSize * 4.5);
+        this.origY = 9;
+        this.keypad = new Keypad(this.origX, this.origY, this.cellSize);
         this.generate();
+        this.draw();
     }
 
     generate() {
@@ -260,139 +261,92 @@ class Board {
         return safeNums;
     }
 
-    draw(ctx) {
-        let cellSize = Math.floor(Math.min(ctx.canvas.width - 18, ctx.canvas.height - 18) / 9);
-        this.cellSize = cellSize;
-        let origX = Math.floor(ctx.canvas.width / 2 - cellSize * 4.5);
-        let origY = 9;
-        this.origX = origX;
-        this.origY = origY;
+    draw() {
         for (let i = 0; i < 10; i++) {
-            line(ctx, origX + cellSize * i, origY, origX + cellSize * i, origY + cellSize * 9, i);
+            line(this.ctx, this.origX + this.cellSize * i, this.origY, this.origX + this.cellSize * i, this.origY + this.cellSize * 9, i);
         }
         for (let j = 0; j < 10; j++) {
-            line(ctx, origX, origY + cellSize * j, origX + cellSize * 9, origY + cellSize * j, j);
+            line(this.ctx, this.origX, this.origY + this.cellSize * j, this.origX + this.cellSize * 9, this.origY + this.cellSize * j, j);
         }
-        set_font(ctx, cellSize);
+        set_font(this.ctx, this.cellSize);
         for (let i = 0; i < this.gridCurrent.length; i++) {
             for (let j = 0; j < this.gridCurrent[i].length; j++) {
                 if (this.gridCurrent[j][i] != 0) {
                     if (this.gridPrompt[j][i] != 0) {
-                        ctx.fillStyle = "rgba(0,0,0,0.2)";
-                        ctx.fillRect(origX + cellSize * i, origY + cellSize * j, cellSize, cellSize);
+                        this.ctx.fillStyle = "rgba(0,0,0,0.2)";
+                        this.ctx.fillRect(this.origX + this.cellSize * i, this.origY + this.cellSize * j, this.cellSize, this.cellSize);
                     }
-                    ctx.fillStyle = "black";
-                    draw_text(ctx, this.gridCurrent[j][i], origX + cellSize * i + cellSize * 0.5, origY + cellSize * j + cellSize * 0.5);
+                    this.ctx.fillStyle = "black";
+                    draw_text(this.ctx, this.gridCurrent[j][i], this.origX + this.cellSize * i + this.cellSize * 0.5, this.origY + this.cellSize * j + this.cellSize * 0.5);
                 }
             }
         }
-        this.setCells(this.gridCurrent, origX, origY, cellSize);
-        this.drawNumbers(origX, origY, ctx);
+        // this.setCells(this.gridCurrent, this.origX, this.origY, this.cellSize);
+        this.keypad.draw(this.ctx);
     }
 
-    onBoard(x, y) {
-        x -= this.origX;
-        y -= this.origY;
-        return x>=0 && x <= this.cellSize*9 && y>=0 && y <= this.cellSize*9;
+    clickedBoard(x, y) {
+        let xx = x - this.origX;
+        let yy = y - this.origY;
+        return (xx >= 0 && xx <= this.cellSize * 9) && (yy >= 0 && yy <= this.cellSize * 9);
     }
 
-    setCells(data, X, Y, size) {
-        // initializes this.cells with each cell storing it's x and y
-        for (let i = 0; i < data.length; i++) {
-            this.cells[i] = [];
-            for (let j = 0; j < data[i].length; j++) {
-                this.cells[i][j] = [X + size*i, Y + size*j];
-            }
-        }
-    }
-
-    getCell(x, y) {
+    getClickedCell(x, y) {
         // returns the cell with x, y coords
         x -= this.origX;
-        y -= this.origY + 42; // 42 = size of "home page" button that moves canvas down
+        y -= this.origY; // 42 = size of "home page" button that moves canvas down
         let col = Math.floor(x / this.cellSize);
         let row = Math.floor(y / this.cellSize);
         return [col, row];
     }
 
-    highlightCell(cellCoords, ctx, outline=true) {
+    highlightCell(cellCoords, outline=true) {
         //highlights a selected cell
-        let cellXY = this.cells[cellCoords[0]][cellCoords[1]];
+        let cell_x = this.origX + cellCoords[0] * this.cellSize;
+        let cell_y = this.origY + cellCoords[1] * this.cellSize;
+
         let drawGradient = !outline;
         if (outline) {
-            line(ctx, cellXY[0], cellXY[1], cellXY[0] + this.cellSize, cellXY[1], -1);
-            line(ctx, cellXY[0], cellXY[1], cellXY[0], cellXY[1] + this.cellSize, -1);
-            line(ctx, cellXY[0] + this.cellSize, cellXY[1], cellXY[0] + this.cellSize, cellXY[1] + this.cellSize, -1);
-            line(ctx, cellXY[0], cellXY[1] + this.cellSize, cellXY[0] + this.cellSize, cellXY[1] + this.cellSize, -1);
+            line(this.ctx, cell_x, cell_y, cell_x + this.cellSize, cell_y, -1);
+            line(this.ctx, cell_x, cell_y, cell_x, cell_y + this.cellSize, -1);
+            line(this.ctx, cell_x + this.cellSize, cell_y, cell_x + this.cellSize, cell_y + this.cellSize, -1);
+            line(this.ctx, cell_x, cell_y + this.cellSize, cell_x + this.cellSize, cell_y + this.cellSize, -1);
             if (this.gridCurrent[cellCoords[1]][cellCoords[0]] != 0) {
-                this.highlightAllOfNumber(ctx, this.gridCurrent[cellCoords[1]][cellCoords[0]]);
+                this.highlightAllOfNumber(this.gridCurrent[cellCoords[1]][cellCoords[0]]);
             } else {
                 drawGradient = true;
             }
         }
         if (drawGradient) {
             // gradient fill
-            var grd = ctx.createRadialGradient(cellXY[0] + this.cellSize / 2, cellXY[1] + this.cellSize / 2, 10, cellXY[0] + this.cellSize / 2, cellXY[1] + this.cellSize / 2, this.cellSize);
+            var grd = this.ctx.createRadialGradient(cell_x + this.cellSize / 2, cell_y + this.cellSize / 2, 10, cell_x + this.cellSize / 2, cell_y + this.cellSize / 2, this.cellSize);
             grd.addColorStop(0,"rgba(0,62,214,0.09)");
             grd.addColorStop(1,"rgba(0,151,255,0.8)");
-            ctx.fillStyle = grd;
-            ctx.fillRect(cellXY[0], cellXY[1], this.cellSize, this.cellSize);
+            this.ctx.fillStyle = grd;
+            this.ctx.fillRect(cell_x, cell_y, this.cellSize, this.cellSize);
         }
     }
 
-    highlightAllOfNumber(ctx, num) {
+    highlightAllOfNumber(num) {
         for (let i = 0; i < this.gridCurrent.length; i++) {
             for (let j = 0; j < this.gridCurrent.length; j++) {
                 if (this.gridCurrent[i][j] == num) {
-                    this.highlightCell([j, i], ctx, false);
+                    this.highlightCell([j, i], false);
                 }
             }
         }
     }
 
-    updateCell(cell, num, ctx) {
+    updateCell(cell, num) {
         if (this.gridPrompt[cell[1]][cell[0]] == 0) {
             //updates a cell with the desired number
             this.gridCurrent[cell[1]][cell[0]] = num;
-            cell = this.cells[cell[0]][cell[1]];
-            draw_text(ctx, num, cell[0] + this.cellSize * 0.5, cell[1] + this.cellSize * 0.5);
+            let cell_x = this.origX + cell[0] * this.cellSize;
+            let cell_y = this.origY + cell[1] * this.cellSize;
+            draw_text(this.ctx, num, cell_x + this.cellSize * 0.5, cell_y + this.cellSize * 0.5);
         }
     }
 
-    onNumbers(x, y) {
-        return !(this.getNumber(x, y) == -1);
-    }
 
-    drawNumbers(x, y, ctx) {
-        // displays 1-9, clear in cells to be selected
-        for (let i = 0; i<2; i++){
-            for (let j = 0; j<5; j++) {
-                //draw numbers
-                this.numbers[j + i*5] = [x - this.cellSize * (2 - i), y + j * this.cellSize];
-            }
-        }
-        for(let k = 1; k < 11; k++) {
-            draw_text(ctx, k, this.numbers[k-1][0] + this.cellSize * 0.5, this.numbers[k-1][1] + this.cellSize * 0.5);
-        }
-    }
-
-    getNumber(x, y) {
-        //returns which value was selected
-        y -= this.origY;
-        x -= this.numbers[0][0];
-        let col = Math.floor(x / this.cellSize);
-        let row = Math.round(y / this.cellSize);
-        if(row > 5 || col > 1 || row < 0 || col < 0){
-            return -1;
-        }
-        let num = row + col*5;
-        if (num <= 0 || num > 10){
-            return -1;
-        }
-        if (num == 10){
-            num = 0;
-        }
-        return num;
-    }
 }
 
