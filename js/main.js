@@ -38,7 +38,7 @@ window.onload = function() {
     });
 
     $("#btnSolution").click(function() {
-        board.data = board.original;
+        board.data = board.solution;
         ctx.clearRect(0, 0, cvs.width, cvs.height);
         board.draw(ctx);
         $("#btnSolution").toggle();

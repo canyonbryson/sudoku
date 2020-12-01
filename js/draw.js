@@ -4,7 +4,7 @@ function line(ctx, x1, y1, x2, y2, num) {
         ctx.strokeStyle = "black";
     } else if (num == -1) {
         ctx.lineWidth = 3;
-        ctx.strokeStyle = "blue";
+        ctx.strokeStyle = "rgb(0,151,255)";
     }
     else {
         ctx.lineWidth = 1;
