@@ -2,7 +2,7 @@ class Message {
     constructor(ctx, msg) {
         this.ctx = ctx;
 
-        const BTN_HOME = "<form action='index.html' method='GET'><button type='submit' class='btn btn-danger' id='btnHome' name='difficulty' value='1'>Home</button></form>";
+        const BTN_HOME = "<button type='submit' class='btn btn-secondary' id='btnHome'>Home</button>";
         const BTN_TRY_AGAIN = "<button class='btn btn-secondary' id='btnTryAgain'>Try Again</button>"
 
         switch (msg) {

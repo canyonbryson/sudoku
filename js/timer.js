@@ -3,14 +3,14 @@ class Timer {
         this.time = Date.now();
         this.ctx = ctx;
         this.difficulty = "";
-        switch (getQueryString()["difficulty"]) {
-            case "50": 
+        switch (parseInt(getQueryString()["difficulty"])) {
+            case 1: 
                 this.difficulty = "Easy";
                 break;
-            case "100":
+            case 2:
                 this.difficulty = "Medium";
                 break;
-            case "150":
+            case 3:
                 this.difficulty = "Hard";
         }
         this.start();

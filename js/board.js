@@ -4,7 +4,6 @@ class Board {
         this.highlightedCell = [-1, -1];
         this.ctx = ctx;
         this.difficulty = difficulty;
-        this.attempts = 0;
         this.data = [];
         this.cellSize = Math.floor(Math.min(this.ctx[0].canvas.width - 18, this.ctx[0].canvas.height - 18) / 9);
         this.origX = Math.floor(this.ctx[0].canvas.width / 2 - this.cellSize * 4.5);
@@ -24,14 +23,57 @@ class Board {
             this.gridNotes.push([[], [], [], [], [], [], [], [], []]);
         }
 
-        this.randomizeGroup(this.data, 1); // randomly fill groups 1, 5, & 9
+        this.randomizeGroup(this.data, 1);
         this.randomizeGroup(this.data, 5);
         this.randomizeGroup(this.data, 9);
 
-        this.gridSolution = this.createBoard(this.data); // recursively solve board
-        this.gridPrompt = this.removeCells(this.cloneArray(this.gridSolution)); // recursively remove numbers from board
-        this.gridCurrent = this.cloneArray(this.gridPrompt);
+        let cellsRemoved = 0;
+        let gridParameters = {};
+        switch (this.difficulty) {
+            case 1:
+                gridParameters = { minToRemove: 36, maxToRemove: 42, maxAttempts: 50 };
+                break;
+            case 2:
+                gridParameters = { minToRemove: 41, maxToRemove: 46, maxAttempts: 100 };
+                break;
+            case 3:
+                gridParameters = { minToRemove: 47, maxToRemove: 64, maxAttempts: 150 };
+        }
+
+        while (cellsRemoved < gridParameters.minToRemove) {
+            console.log("start");
+            this.gridSolution = this.createBoard(this.data); // recursively solve board
+            let gridPrompt = { cellsRemoved: 0 }; // recursively remove numbers from board
+
+            for (let i = 0; i < 3; i++) {
+                let newPossibility = this.removeCells(this.gridSolution, gridParameters);
+                console.log(newPossibility.cellsRemoved);
+                if (newPossibility.cellsRemoved > gridPrompt.cellsRemoved) {
+                    gridPrompt = newPossibility;
+                    cellsRemoved = gridPrompt.cellsRemoved;
+                }
+                if (cellsRemoved >= gridParameters.minToRemove) {
+                    break;
+                }
+            }
+
+            this.gridPrompt = gridPrompt.data;
+            this.gridCurrent = this.cloneArray(this.gridPrompt);
+        }
+
+        $("#loading").hide();
     }
+
+    // nextPossibility() {
+    //     this.currentPossbility++;
+    //     if (this.currentPossbility == this.promptPossibilities.length) {
+    //         this.currentPossbility = 0;
+    //     }
+    //     this.gridCurrent = this.promptPossibilities[this.currentPossbility].data;
+    //     this.gridPrompt = this.promptPossibilities[this.currentPossbility].data;
+    //     this.draw();
+    //     console.log(this.promptPossibilities[this.currentPossbility].cellsRemoved);
+    // }
 
     createBoard(data) {
         return this.fillCell(data).data; // call recursive function
@@ -85,7 +127,18 @@ class Board {
 
     }
 
-    removeCells(data) {
+    removeCells(data, gridParameters) {
+        return this.removeCell(data, gridParameters, 0, 0);
+    }
+
+    removeCell(data, gridParameters, attempts, removed) {
+        if (attempts > gridParameters.maxAttempts || removed >= gridParameters.maxToRemove) {
+            return {
+                data: data,
+                cellsRemoved: removed
+            };
+        }
+
         let tempData = this.cloneArray(data);
         let isZero = true;
         let row = -1;
@@ -99,15 +152,13 @@ class Board {
         }
         tempData[row][col] = 0; // clear cell
 
-        this.attempts += 1;
+        attempts++;
         let result = this.isNewSolution(tempData);
-        if (!result.result) { // if no new solution
-            return this.removeCells(tempData);
-        } else if (this.attempts < this.difficulty) {
-            return this.removeCells(data);
-        }
-        else {
-            return data;
+        if (!result.result) { // if is a unique solution
+            removed++;
+            return this.removeCell(tempData, gridParameters, attempts, removed);
+        } else {
+            return this.removeCell(data, gridParameters, attempts, removed);
         }
     }
 
