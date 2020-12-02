@@ -18,6 +18,16 @@ class Message {
                     board.clearMessage();
                     $("#divButtons").html(BTN_HOME);
                 });
+                break;
+            case "egg":
+                this.text = ["Game by:", "Canyon Bryson", "Kollin Murphy"];
+                $("#divButtons").html(BTN_TRY_AGAIN + BTN_HOME);
+                $("#btnTryAgain").html("Keep Playing");
+                $("#btnTryAgain").bind('touchend', function() {
+                    board.clearMessage();
+                    $("#divButtons").html(BTN_HOME);
+                });
+
         }
         this.draw();
     }

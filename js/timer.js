@@ -21,6 +21,7 @@ class Timer {
         self.ctx.textAlign = "left";
         self.ctx.textBaseline = "bottom";    
         self.ctx.font = "24px Arial";
+        self.ctx.fillStyle = "black";
         self.ctx.fillText(self.formatSeconds(timeElapsed), 16, self.ctx.canvas.height - 16);
         self.ctx.textAlign = "center";
         self.ctx.textBaseline = "middle";

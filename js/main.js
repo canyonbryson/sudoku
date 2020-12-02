@@ -20,6 +20,7 @@ window.onload = function() {
         ctx.push(cvs[i].getContext('2d'));
     }
     board = new Board(difficulty, ctx);
+    var egg = new Egg(ctx[2]);
 
     $(document).bind('touchstart', function (e) {
         if (!board.inactive) {
@@ -71,6 +72,10 @@ window.onload = function() {
                     } else {
                         board.updateNote(num);
                         board.highlightCell(board.highlightedCell);
+                    }
+                } else {
+                    if (x < 80 && y > window.innerHeight - 50) {
+                        egg.increment();
                     }
                 }
             }
