@@ -1,25 +1,20 @@
 var board;
 
 window.onload = function () {
-    var difficulty = getQueryString()["difficulty"];
+    var difficulty = parseInt(getQueryString()["difficulty"]);
     var cvs = [document.querySelector("#cvsMain"), document.querySelector("#cvsFireworks"), document.querySelector("#cvsMsg")];
-    var ctx = [];
-    for (let i = 0; i < cvs.length; i++) { // initialize canvases & contexts
-        cvs[i].width = window.innerWidth;
-        cvs[i].height = window.innerHeight;
-        ctx.push(cvs[i].getContext('2d'));
-    }
+    var ctx = initializeContexts(cvs);
     board = new Board(difficulty, ctx);
     var egg = new Egg(ctx[2]);
 
     $(document).bind('touchstart', function (e) {
-        if (!board.inactive) {
+        if (!board.inactive) { // if there is no message open
             let x = e.touches[0].clientX;
             let y = e.touches[0].clientY;
 
             if (board.clickedBoard(x, y)) {
                 let newCell = board.getClickedCell(x, y);
-                if (newCell[0] == board.highlightedCell[0] && newCell[1] == board.highlightedCell[1]) {
+                if (board.compareArray(newCell, board.highlightedCell)) {
                     board.highlightCell([-1, -1]); // clear cell if clicking currently highlighted cell
                 } else {
                     board.highlightCell(newCell); // highlight recently clicked cell
@@ -31,17 +26,13 @@ window.onload = function () {
                             board.updateCell(board.keypad.selectedKey + 1);
                         } else { // otherwise, update note
                             board.updateNote(board.keypad.selectedKey + 1);
-                            // board.highlightCell([-1, -1]);
-                            // board.highlightAllOfNumber(board.keypad.selectedKey + 1);
                         }
                     } else {
                         if (board.keypad.selectedNote) { // if note is selected but no number, deselect note when clicking a cell
-                            board.keypad.selectKey(9);
+                            // board.keypad.selectKey(9);
                         }
                         if (selectedKey == 10) { // clear
                             board.updateCell(0);
-                        } else if (selectedKey == 9) { // note
-                            // board.updateNotes(board.keypad.selectedKey + 1);
                         }
                     }
                 }
@@ -83,4 +74,14 @@ function getQueryString() {
         result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
     }
     return result;
+}
+
+function initializeContexts(cvs) {
+    let ctx = [];
+    for (let i = 0; i < cvs.length; i++) { // initialize canvases & contexts
+        cvs[i].width = window.innerWidth;
+        cvs[i].height = window.innerHeight;
+        ctx.push(cvs[i].getContext('2d'));
+    }
+    return ctx;
 }

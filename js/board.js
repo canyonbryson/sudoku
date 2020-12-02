@@ -352,7 +352,8 @@ class Board {
         if (!this.compareArray(this.highlightedCell, [-1, -1])) { // if there is a cell selected
             if (this.gridPrompt[this.highlightedCell[1]][this.highlightedCell[0]] == 0) {
                 //updates a cell with the desired number
-                if (num == 0) {
+                if (num == 0 && this.gridCurrent[this.highlightedCell[1]][this.highlightedCell[0]] == 0) {
+                    // if clearing, clear the notes only if the cell is currently empty
                     this.gridNotes[this.highlightedCell[1]][this.highlightedCell[0]] = [];
                 }
                 this.gridCurrent[this.highlightedCell[1]][this.highlightedCell[0]] = num;
