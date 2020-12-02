@@ -32,3 +32,11 @@ function set_font(ctx, cellSize) {
     ctx.textBaseline = "middle";
     ctx.fillStyle = "black";
 }
+
+function set_font_small(ctx, cellSize) {
+    let size = Math.round(cellSize * 0.3);
+    ctx.font = size + "px Arial";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.fillStyle = "black";
+}
