@@ -10,7 +10,7 @@ window.onload = function() {
         return result;
     }
       
-    var difficulty = getQueryString()["difficulty"];    // let difficulty = get_cookie("difficulty", 1); // does not work on local files, only on www
+    var difficulty = getQueryString()["difficulty"];
     $("#btnHome").val(difficulty);
     var cvs = [document.querySelector("#cvsMain"), document.querySelector("#cvsFireworks"), document.querySelector("#cvsMsg")];
     var ctx = [];
