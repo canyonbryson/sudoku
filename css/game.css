@@ -3,6 +3,10 @@
   text-align: center;
 }
 
+body {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
 canvas {
   position: absolute;
   top: 0px;
@@ -23,15 +27,6 @@ canvas {
   width: 100%;
   z-index: 2;
 }
-
-/* #msgButtons {
-  position: absolute;
-  bottom: 24px;
-  width: 100%;
-  z-index: 2;
-} */
-
-
 
 .btn {
   margin-top: 8px;

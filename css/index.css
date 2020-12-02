@@ -1,3 +1,7 @@
+body {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
 #main {
     display: flex;
     flex-direction: column;
@@ -53,4 +57,13 @@
 
 form {
     width: 80%;
+}
+
+.jumbotron {
+    text-align: center;
+    margin-bottom: 64px;
+}
+
+.lead {
+    font-size: 1.9em;
 }

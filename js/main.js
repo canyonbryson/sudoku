@@ -1,15 +1,8 @@
 var board;
 
-window.onload = function() {
-    function getQueryString() {
-        var result = {}, queryString = location.search.slice(1),
-            re = /([^&=]+)=([^&]*)/g, m;
-        while (m = re.exec(queryString)) {
-          result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-        }
-        return result;
-    }
-      
+window.onload = function () {
+
+
     var difficulty = getQueryString()["difficulty"];
     $("#btnHome").val(difficulty);
     var cvs = [document.querySelector("#cvsMain"), document.querySelector("#cvsFireworks"), document.querySelector("#cvsMsg")];
@@ -26,16 +19,16 @@ window.onload = function() {
         if (!board.inactive) {
             let x = e.touches[0].clientX;
             let y = e.touches[0].clientY;
-            
-            if(board.clickedBoard(x, y)) {
+
+            if (board.clickedBoard(x, y)) {
                 let newCell = board.getClickedCell(x, y);
                 if (newCell[0] == board.highlightedCell[0] && newCell[1] == board.highlightedCell[1]) {
                     board.highlightCell([-1, -1]); // clear cell if clicking currently highlighted cell
                 } else {
                     board.highlightCell(newCell); // highlight recently clicked cell
-    
+
                     let selectedKey = board.keypad.selectedKey;
-    
+
                     if (selectedKey >= 0 && selectedKey <= 8) { // if a number is selected, update the number or the note
                         if (!board.keypad.selectedNote) { // if note is not selected, update cell value
                             board.updateCell(board.keypad.selectedKey + 1);
@@ -56,7 +49,7 @@ window.onload = function() {
                     }
                 }
             } else { // clicked keypad
-                let isNothingHighlighted = board.compareArray(board.highlightedCell, [-1,-1]);
+                let isNothingHighlighted = board.compareArray(board.highlightedCell, [-1, -1]);
                 let num = board.keypad.getClickedNumber(x, y, isNothingHighlighted);
                 if (!isNothingHighlighted && num == 0 && board.gridCurrent[board.highlightedCell[1]][board.highlightedCell[0]] == 0 && board.gridNotes[board.highlightedCell[1]][board.highlightedCell[0]].length == 0) {
                     // if clearing a cell but it's already blank, hold down clear
@@ -82,10 +75,19 @@ window.onload = function() {
         }
     });
 
-    $("#btnSolution").click(function() {
+    $("#btnSolution").click(function () {
         board.gridCurrent = board.gridSolution;
         ctx[0].clearRect(0, 0, cvs[0].width, cvs[0].height);
         board.draw();
         $("#btnSolution").hide();
     });
 };
+
+function getQueryString() {
+    var result = {}, queryString = location.search.slice(1),
+        re = /([^&=]+)=([^&]*)/g, m;
+    while (m = re.exec(queryString)) {
+        result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+    return result;
+}

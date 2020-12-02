@@ -2,6 +2,17 @@ class Timer {
     constructor(ctx) {
         this.time = Date.now();
         this.ctx = ctx;
+        this.difficulty = "";
+        switch (getQueryString()["difficulty"]) {
+            case "50": 
+                this.difficulty = "Easy";
+                break;
+            case "100":
+                this.difficulty = "Medium";
+                break;
+            case "150":
+                this.difficulty = "Hard";
+        }
         this.start();
     }
 
@@ -23,6 +34,8 @@ class Timer {
         self.ctx.font = "24px Arial";
         self.ctx.fillStyle = "black";
         self.ctx.fillText(self.formatSeconds(timeElapsed), 16, self.ctx.canvas.height - 16);
+        self.ctx.textAlign = "right";
+        self.ctx.fillText(self.difficulty, window.innerWidth - 16, self.ctx.canvas.height - 16);
         self.ctx.textAlign = "center";
         self.ctx.textBaseline = "middle";
     }
