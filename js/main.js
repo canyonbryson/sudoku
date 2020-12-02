@@ -1,13 +1,10 @@
 var board;
 
 window.onload = function () {
-
-
     var difficulty = getQueryString()["difficulty"];
-    $("#btnHome").val(difficulty);
     var cvs = [document.querySelector("#cvsMain"), document.querySelector("#cvsFireworks"), document.querySelector("#cvsMsg")];
     var ctx = [];
-    for (let i = 0; i < cvs.length; i++) {
+    for (let i = 0; i < cvs.length; i++) { // initialize canvases & contexts
         cvs[i].width = window.innerWidth;
         cvs[i].height = window.innerHeight;
         ctx.push(cvs[i].getContext('2d'));
@@ -56,15 +53,14 @@ window.onload = function () {
                     board.keypad.selectKey(10);
                 }
                 if (num != -1) {
-                    if (num == 0) {
+                    if (num == 0) { // if selecting clear, deselect the note button and any numbers
                         board.keypad.selectedNote = false;
                         board.keypad.selectKey(-1);
                     }
-                    if (!board.keypad.selectedNote) {
+                    if (!board.keypad.selectedNote) { // update the cell or the note
                         board.updateCell(num);
                     } else {
                         board.updateNote(num);
-                        board.highlightCell(board.highlightedCell);
                     }
                 } else {
                     if (x < 80 && y > window.innerHeight - 50) {
@@ -75,11 +71,8 @@ window.onload = function () {
         }
     });
 
-    $("#btnSolution").click(function () {
-        board.gridCurrent = board.gridSolution;
-        ctx[0].clearRect(0, 0, cvs[0].width, cvs[0].height);
-        board.draw();
-        $("#btnSolution").hide();
+    $("#btnHome").bind('touchend', function() {
+        document.location = 'index.html';
     });
 };
 

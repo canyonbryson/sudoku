@@ -356,9 +356,6 @@ class Board {
                     this.gridNotes[this.highlightedCell[1]][this.highlightedCell[0]] = [];
                 }
                 this.gridCurrent[this.highlightedCell[1]][this.highlightedCell[0]] = num;
-                let cell_x = this.origX + this.highlightedCell[0] * this.cellSize;
-                let cell_y = this.origY + this.highlightedCell[1] * this.cellSize;
-                draw_text(this.ctx[0], num, cell_x + this.cellSize * 0.5, cell_y + this.cellSize * 0.5);
                 this.highlightCell(this.highlightedCell);
             }
             this.checkComplete();
@@ -371,20 +368,9 @@ class Board {
                 //updates a cell with the desired number
                 this.gridNotes[this.highlightedCell[1]][this.highlightedCell[0]].push(num);
                 this.gridNotes[this.highlightedCell[1]][this.highlightedCell[0]] = this.removeNoteDuplicates(this.gridNotes[this.highlightedCell[1]][this.highlightedCell[0]]);
-                this.highlightCell([-1, -1]);
-                this.highlightAllOfNumber(num);
-            }
-        }
-    }
-
-    clearNotes() {
-        if (!this.compareArray(this.highlightedCell, [-1, -1])) { // if there is a cell selected
-            if (this.gridPrompt[this.highlightedCell[1]][this.highlightedCell[0]] == 0) {
-                //updates a cell with the desired number
-                this.gridNotes[this.highlightedCell[1]][this.highlightedCell[0]] = [];
-                this.highlightCell(this.highlightedCell, true);
-                this.draw();
                 // this.highlightCell([-1, -1]);
+                this.highlightCell(this.highlightedCell);
+                this.highlightAllOfNumber(num);
             }
         }
     }
