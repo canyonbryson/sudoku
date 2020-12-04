@@ -15,7 +15,7 @@ window.onload = function () {
     var difficulty = parseInt(getQueryString()["difficulty"]);
     var cvs = [document.querySelector("#cvsMain"), document.querySelector("#cvsFireworks"), document.querySelector("#cvsMsg")];
     var ctx = initializeContexts(cvs);
-    board = new Board(difficulty, ctx);
+    board = new Board(difficulty, ctx, draw1);
     var egg = new Egg(ctx[2]);
 
     $(document).bind('touchstart', function (e) {

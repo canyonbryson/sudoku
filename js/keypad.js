@@ -1,7 +1,7 @@
 class Keypad {
-    constructor(ctx, origX, origY, cellSize) {
+    constructor(ctx, origX, origY, cellSize, draw1) {
         this.ctx = ctx;
-
+        this.drawer = draw1
         this.origX = origX + cellSize * 3.5;
         this.origY = origY + cellSize * 10;
         this.cellSize = cellSize;
@@ -82,10 +82,10 @@ class Keypad {
         this.ctx.fillRect(this.origX - this.cellSize / 2, this.origY - this.cellSize / 2, this.cellSize * 3, this.cellSize * 3);
         this.ctx.fillRect(this.origX - this.cellSize / 2, this.origY + this.cellSize * 2.5, this.cellSize * 2, this.cellSize);
         for (let i = 0; i < 4; i++) {
-            line(this.ctx, this.origX + this.cellSize * (i - 0.5), this.origY - this.cellSize / 2, this.origX + this.cellSize * (i - 0.5), this.origY + this.cellSize * 2.5, i);
+            this.drawer.line(this.ctx, this.origX + this.cellSize * (i - 0.5), this.origY - this.cellSize / 2, this.origX + this.cellSize * (i - 0.5), this.origY + this.cellSize * 2.5, i);
         }
         for (let j = 0; j < 3; j++) {
-            line(this.ctx, this.origX - this.cellSize / 2, this.origY + this.cellSize * (j - 0.5), this.origX + this.cellSize * 2.5, this.origY + this.cellSize * (j - 0.5), j);
+            this.drawer.line(this.ctx, this.origX - this.cellSize / 2, this.origY + this.cellSize * (j - 0.5), this.origX + this.cellSize * 2.5, this.origY + this.cellSize * (j - 0.5), j);
         }
 
         if (this.selectedKey != -1) {
@@ -101,26 +101,26 @@ class Keypad {
         this.ctx.fillStyle = "black";
 
         // horizontal lines row 3
-        line(this.ctx, this.origX - this.cellSize / 2, this.origY + this.cellSize * 2.5, this.origX + this.cellSize / 2, this.origY + this.cellSize * 2.5, 1);
-        line(this.ctx, this.origX + this.cellSize / 2, this.origY + this.cellSize * 2.5, this.origX + this.cellSize * 1.5, this.origY + this.cellSize * 2.5, 1);
-        line(this.ctx, this.origX + this.cellSize * 1.5, this.origY + this.cellSize * 2.5, this.origX + this.cellSize * 2.5, this.origY + this.cellSize * 2.5, 0);
+        this.drawer.line(this.ctx, this.origX - this.cellSize / 2, this.origY + this.cellSize * 2.5, this.origX + this.cellSize / 2, this.origY + this.cellSize * 2.5, 1);
+        this.drawer.line(this.ctx, this.origX + this.cellSize / 2, this.origY + this.cellSize * 2.5, this.origX + this.cellSize * 1.5, this.origY + this.cellSize * 2.5, 1);
+        this.drawer.line(this.ctx, this.origX + this.cellSize * 1.5, this.origY + this.cellSize * 2.5, this.origX + this.cellSize * 2.5, this.origY + this.cellSize * 2.5, 0);
 
 
         // vertical lines row 3
-        line(this.ctx, this.origX - this.cellSize / 2, this.origY + this.cellSize * 2.5, this.origX - this.cellSize / 2, this.origY + this.cellSize * 3.5, 0);
-        line(this.ctx, this.origX + this.cellSize / 2, this.origY + this.cellSize * 2.5, this.origX + this.cellSize / 2, this.origY + this.cellSize * 3.5, 1);
-        line(this.ctx, this.origX + this.cellSize * 1.5, this.origY + this.cellSize * 2.5, this.origX + this.cellSize * 1.5, this.origY + this.cellSize * 3.5, 0);
+        this.drawer.line(this.ctx, this.origX - this.cellSize / 2, this.origY + this.cellSize * 2.5, this.origX - this.cellSize / 2, this.origY + this.cellSize * 3.5, 0);
+        this.drawer.line(this.ctx, this.origX + this.cellSize / 2, this.origY + this.cellSize * 2.5, this.origX + this.cellSize / 2, this.origY + this.cellSize * 3.5, 1);
+        this.drawer.line(this.ctx, this.origX + this.cellSize * 1.5, this.origY + this.cellSize * 2.5, this.origX + this.cellSize * 1.5, this.origY + this.cellSize * 3.5, 0);
 
         // bottom border
-        line(this.ctx, this.origX - this.cellSize / 2, this.origY + this.cellSize * 3.5, this.origX + this.cellSize * 1.5, this.origY + this.cellSize * 3.5, 0);
+        this.drawer.line(this.ctx, this.origX - this.cellSize / 2, this.origY + this.cellSize * 3.5, this.origX + this.cellSize * 1.5, this.origY + this.cellSize * 3.5, 0);
 
         for (let i = 0; i < 9; i++) {
             let column = i % 3;
             let row = Math.floor((i - column) / 3);
-            draw_text(this.ctx, i + 1, this.origX + column * this.cellSize, this.origY + row * this.cellSize);
+            this.drawer.draw_text(this.ctx, i + 1, this.origX + column * this.cellSize, this.origY + row * this.cellSize);
         }
-        draw_text(this.ctx, "C", this.origX + this.cellSize, this.origY + 3 * this.cellSize);
-        draw_text(this.ctx, "N", this.origX, this.origY + 3 * this.cellSize);
+        this.drawer.draw_text(this.ctx, "C", this.origX + this.cellSize, this.origY + 3 * this.cellSize);
+        this.drawer.draw_text(this.ctx, "N", this.origX, this.origY + 3 * this.cellSize);
     }
 
     getNumber(x, y) {

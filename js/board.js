@@ -1,14 +1,15 @@
 
 class Board {
-    constructor(difficulty, ctx) {
+    constructor(difficulty, ctx, draw1) {
         this.highlightedCell = [-1, -1];
         this.ctx = ctx;
+        this.drawer = draw1;
         this.difficulty = difficulty;
         this.data = [];
         this.cellSize = Math.floor(Math.min(this.ctx[0].canvas.width - 18, this.ctx[0].canvas.height - 18) / 9);
         this.origX = Math.floor(this.ctx[0].canvas.width / 2 - this.cellSize * 4.5);
         this.origY = 9;
-        this.keypad = new Keypad(this.ctx[0], this.origX, this.origY, this.cellSize);
+        this.keypad = new Keypad(this.ctx[0], this.origX, this.origY, this.cellSize, draw1);
         this.generate();
         this.draw();
         this.timer = new Timer(ctx[2]);
@@ -290,12 +291,12 @@ class Board {
     draw() {
         this.ctx[0].clearRect(0, 0, this.ctx[0].canvas.width, this.ctx[0].canvas.height);
         for (let i = 0; i < 10; i++) {
-            line(this.ctx[0], this.origX + this.cellSize * i, this.origY, this.origX + this.cellSize * i, this.origY + this.cellSize * 9, i);
+            this.drawer.line(this.ctx[0], this.origX + this.cellSize * i, this.origY, this.origX + this.cellSize * i, this.origY + this.cellSize * 9, i);
         }
         for (let j = 0; j < 10; j++) {
-            line(this.ctx[0], this.origX, this.origY + this.cellSize * j, this.origX + this.cellSize * 9, this.origY + this.cellSize * j, j);
+            this.drawer.line(this.ctx[0], this.origX, this.origY + this.cellSize * j, this.origX + this.cellSize * 9, this.origY + this.cellSize * j, j);
         }
-        set_font(this.ctx[0], this.cellSize);
+        this.drawer.set_font(this.ctx[0], this.cellSize);
         for (let i = 0; i < this.gridCurrent.length; i++) {
             for (let j = 0; j < this.gridCurrent[i].length; j++) {
                 if (this.gridCurrent[j][i] != 0) {
@@ -304,15 +305,15 @@ class Board {
                         this.ctx[0].fillRect(this.origX + this.cellSize * i, this.origY + this.cellSize * j, this.cellSize, this.cellSize);
                     }
                     this.ctx[0].fillStyle = "black";
-                    draw_text(this.ctx[0], this.gridCurrent[j][i], this.origX + this.cellSize * i + this.cellSize * 0.5, this.origY + this.cellSize * j + this.cellSize * 0.5);
+                    this.drawer.draw_text(this.ctx[0], this.gridCurrent[j][i], this.origX + this.cellSize * i + this.cellSize * 0.5, this.origY + this.cellSize * j + this.cellSize * 0.5);
                 } else if (this.gridNotes[j][i].length != 0) {
-                    set_font_small(this.ctx[0], this.cellSize);
+                    this.drawer.set_font_small(this.ctx[0], this.cellSize);
                     for (let k = 0; k < this.gridNotes[j][i].length; k++) {
                         let col = (this.gridNotes[j][i][k] - 1) % 3 + 0.4;
                         let row = (this.gridNotes[j][i][k] - col - 1) / 3 + 0.1;
-                        draw_text(this.ctx[0], this.gridNotes[j][i][k], this.origX + this.cellSize * i + (col * this.cellSize * 0.3), this.origY + this.cellSize * j + (row * this.cellSize * 0.3));
+                        this.drawer.draw_text(this.ctx[0], this.gridNotes[j][i][k], this.origX + this.cellSize * i + (col * this.cellSize * 0.3), this.origY + this.cellSize * j + (row * this.cellSize * 0.3));
                     }
-                    set_font(this.ctx[0], this.cellSize);
+                    this.drawer.set_font(this.ctx[0], this.cellSize);
                 }   
             }
         }
@@ -347,10 +348,10 @@ class Board {
             let drawGradient = !outline;
             if (outline) {
                 this.draw(); // clear canvas and redraw board if selecting new cell
-                line(this.ctx[0], cell_x, cell_y, cell_x + this.cellSize, cell_y, -1);
-                line(this.ctx[0], cell_x, cell_y, cell_x, cell_y + this.cellSize, -1);
-                line(this.ctx[0], cell_x + this.cellSize, cell_y, cell_x + this.cellSize, cell_y + this.cellSize, -1);
-                line(this.ctx[0], cell_x, cell_y + this.cellSize, cell_x + this.cellSize, cell_y + this.cellSize, -1);
+                this.drawer.line(this.ctx[0], cell_x, cell_y, cell_x + this.cellSize, cell_y, -1);
+                this.drawer.line(this.ctx[0], cell_x, cell_y, cell_x, cell_y + this.cellSize, -1);
+                this.drawer.line(this.ctx[0], cell_x + this.cellSize, cell_y, cell_x + this.cellSize, cell_y + this.cellSize, -1);
+                this.drawer.line(this.ctx[0], cell_x, cell_y + this.cellSize, cell_x + this.cellSize, cell_y + this.cellSize, -1);
                 if (this.gridCurrent[cellCoords[1]][cellCoords[0]] != 0) {
                     this.highlightAllOfNumber(this.gridCurrent[cellCoords[1]][cellCoords[0]]);
                 } else {
