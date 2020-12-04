@@ -28,7 +28,7 @@ class Board {
         this.randomizeGroup(this.data, 9);
 
         let cellsRemoved = 0;
-        let gridParameters = {};
+        let gridParameters = { minToRemove: 36, maxToRemove: 42, maxAttempts: 50 };
         switch (this.difficulty) {
             case 1:
                 gridParameters = { minToRemove: 36, maxToRemove: 42, maxAttempts: 50 };
@@ -63,17 +63,6 @@ class Board {
 
         $("#loading").hide();
     }
-
-    // nextPossibility() {
-    //     this.currentPossbility++;
-    //     if (this.currentPossbility == this.promptPossibilities.length) {
-    //         this.currentPossbility = 0;
-    //     }
-    //     this.gridCurrent = this.promptPossibilities[this.currentPossbility].data;
-    //     this.gridPrompt = this.promptPossibilities[this.currentPossbility].data;
-    //     this.draw();
-    //     console.log(this.promptPossibilities[this.currentPossbility].cellsRemoved);
-    // }
 
     createBoard(data) {
         return this.fillCell(data).data; // call recursive function

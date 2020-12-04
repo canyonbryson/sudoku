@@ -73,6 +73,14 @@ window.onload = function () {
         }
     });
 
+    $(document).bind('touchmove', function(e) {
+
+    });
+
+    $(document).bind('touchend', function(e) {
+
+    });
+
     $("#btnHome").bind('touchend', function() {
         document.location = 'index.html';
     });
