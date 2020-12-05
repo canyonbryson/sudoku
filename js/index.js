@@ -1,3 +1,5 @@
+var painter;
+
 window.onload = function() {
-    // nothing to see here!
+    painter = new Painter();
 };

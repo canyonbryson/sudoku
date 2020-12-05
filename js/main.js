@@ -1,21 +1,12 @@
 var board;
-
-// function onReady(callback) {
-//     var intervalID = window.setInterval(checkReady, 1000);
-
-//     function checkReady() {
-//         if (document.getElementsByTagName('body')[0] !== undefined) {
-//             window.clearInterval(intervalID);
-//             callback.call(this);
-//         }
-//     }
-// }
+var painter;
 
 window.onload = function () {
-    var difficulty = parseInt(getQueryString()["difficulty"]);
+    painter = new Painter();
+    var difficulty = get_url_data("difficulty");
     var cvs = [document.querySelector("#cvsMain"), document.querySelector("#cvsFireworks"), document.querySelector("#cvsMsg")];
     var ctx = initializeContexts(cvs);
-    board = new Board(difficulty, ctx, draw1);
+    board = new Board(difficulty, ctx);
     var egg = new Egg(ctx[2]);
 
     $(document).bind('touchstart', function (e) {
@@ -85,22 +76,3 @@ window.onload = function () {
         document.location = 'index.html';
     });
 };
-
-function getQueryString() {
-    var result = {}, queryString = location.search.slice(1),
-        re = /([^&=]+)=([^&]*)/g, m;
-    while (m = re.exec(queryString)) {
-        result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-    }
-    return result;
-}
-
-function initializeContexts(cvs) {
-    let ctx = [];
-    for (let i = 0; i < cvs.length; i++) { // initialize canvases & contexts
-        cvs[i].width = window.innerWidth;
-        cvs[i].height = window.innerHeight;
-        ctx.push(cvs[i].getContext('2d'));
-    }
-    return ctx;
-}
