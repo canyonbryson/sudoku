@@ -17,10 +17,10 @@ class Painter {
             },
             {
                 id: 2,
-                name: "Blue",
-                background: "rgb(0,0,55)",
+                name: "Night",
+                background: "rgb(0,0,85)",
                 foreground: "rgb(245,245,245)",
-                accent: "rgb(2,2,30)"
+                accent: "rgb(82,82,200)"
             },
         ];
 
