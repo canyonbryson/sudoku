@@ -1,6 +1,7 @@
 
 class Board {
-    constructor(difficulty, ctx) {
+    constructor(type, difficulty, ctx) {
+        this.type = type; //1=knight, 2=king, 0=normal
         this.highlightedCell = [-1, -1];
         this.ctx = ctx;
         this.difficulty = difficulty;
@@ -24,7 +25,7 @@ class Board {
         }
 
         this.randomizeGroup(this.data, 1);
-        this.randomizeGroup(this.data, 5);
+        if (this.type == 0) {this.randomizeGroup(this.data, 5);}
         this.randomizeGroup(this.data, 9);
 
         let cellsRemoved = 0;
@@ -284,7 +285,104 @@ class Board {
                 safeNums.push(i + 1);
             }
         }
+        if (this.type == 1) {
+            return this.checkKnight(safeNums, grid, row, col);
+        } else if (this.type == 2) {
+            return this.checkKing(safeNums, grid, row, col);
+        } else {
         return safeNums;
+    }}
+
+    checkKnight(list, grid, row, col) {
+        //if num in list violates knights, pop it off
+        for (let i = 0; i < list.length; i++){
+            //move 2 then 1
+            try {
+                if (grid[row + 2][col + 1] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row + 2][col - 1] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row - 2][col + 1] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row - 2][col - 1] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row + 1][col + 2] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row + 1][col - 2] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row - 1][col + 2] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row - 1][col - 2] == list[i]){
+                    delete list[i];}
+            } catch {}
+        }
+        for (let i = 0; i < list.length; i++) {
+            if (list[i] == undefined){
+                list.splice(i, 1);
+                i--;
+            }
+        }
+        return list;
+    }
+
+    checkKing(list, grid, row, col) {
+        //if num in list violates Kings, pop it off
+        for (let i = 0; i < list.length; i++){
+            //move 1 out
+            try {
+                if (grid[row][col + 1] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row][col - 1] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row - 1][col + 1] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row - 1][col - 1] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row + 1][col + 1] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row + 1][col - 1] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row - 1][col] == list[i]){
+                    delete list[i];}
+            } catch {}
+            try {
+                if (grid[row + 1][col] == list[i]){
+                    delete list[i];}
+            } catch {}
+        }
+        for (let i = 0; i < list.length; i++) {
+            if (list[i] == undefined){
+                list.splice(i, 1);
+                i--;
+            }
+        }
+        return list;
     }
 
     draw() {

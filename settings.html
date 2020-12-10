@@ -34,10 +34,21 @@
             </ul>
           </div> 
           <br> 
-          <!--Make toggle options for chess sudoku with instructions-->      
+          <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Sudoku Type
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li class="btnType" value="0" id="normal">Normal</li>
+              <li class="btnType" value="1" id="knight">Knight</li>
+              <li class="btnType" value="2" id="king">King</li>
+            </ul>
+          </div> 
+          <!--Info / instructions overlay-->
+          <br> 
           <form action='index.html' method='GET'>
             <button type="submit" class="btn btn-secondary btn-lg btn-block" id="btnHome">Home</button>
             <input type="hidden" class="inputColorScheme" name="colorscheme" value="0" />
+            <input type="hidden" class="inputSudokuType" name="type" value="0" />
         </form>
     </div>
     </div>

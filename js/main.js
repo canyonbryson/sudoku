@@ -4,9 +4,12 @@ var painter;
 window.onload = function () {
     painter = new Painter();
     var difficulty = get_url_data("difficulty");
+    var type = get_url_data("type");
+    type = parseInt(type);
+    $(".inputSudokuType").val(type);
     var cvs = [document.querySelector("#cvsMain"), document.querySelector("#cvsFireworks"), document.querySelector("#cvsMsg")];
     var ctx = initializeContexts(cvs);
-    board = new Board(difficulty, ctx);
+    board = new Board(type, difficulty, ctx);
     var egg = new Egg(ctx[2]);
 
     $(document).bind('touchstart', function (e) {
