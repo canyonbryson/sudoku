@@ -89,19 +89,19 @@ class Rocket {
 
 class Fireworks {
     static init(width,height) {
-        var cvs = document.getElementById("cvsFireworks");
-        var ctx = cvs.getContext('2d');
+        let cvs = document.getElementById("cvsFireworks");
+        this.ctx = cvs.getContext('2d');
         this.rockets = [];
         this.rockets.push(new Rocket(width,height));
 
-        setInterval(function() {
+        this.rocketCreator = setInterval(function() {
             if (Fireworks.rockets.length < 6) {
                 Fireworks.rockets.push(new Rocket(width,height));
             }
         },550);
 
-        setInterval(function() {
-            ctx.clearRect(0,0,width,height);
+        this.mainClock = setInterval(function() {
+            Fireworks.ctx.clearRect(0,0,width,height);
             for (var i = 0; i < Fireworks.rockets.length; i++) {
 
                 if (Fireworks.rockets[i].flying || Fireworks.rockets[i].particles.length > 0) {
@@ -112,6 +112,12 @@ class Fireworks {
                 }
             }
         },25);
+    }
+
+    static clear() {
+        clearInterval(this.rocketCreator);
+        clearInterval(this.mainClock);
+        this.ctx.clearRect(0,0,this.ctx.canvas.width,this.ctx.canvas.height);
     }
 }
 

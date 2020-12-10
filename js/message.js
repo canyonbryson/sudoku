@@ -8,7 +8,7 @@ class Message {
         switch (msg) {
             case "won":
                 this.text = ["Congratulations!", "You won!"];
-                new Fireworks(this.ctx.canvas.width, this.ctx.canvas.height);
+                Fireworks.init(this.ctx.canvas.width, this.ctx.canvas.height);
                 $("#divButtons").html(BTN_HOME);
                 break;
             case "incorrect":
@@ -20,11 +20,13 @@ class Message {
                 });
                 break;
             case "egg":
-                this.text = ["Game by:", "Canyon Bryson", "Kollin Murphy"];
+                Fireworks.init(this.ctx.canvas.width, this.ctx.canvas.height);
+                this.text = ["This awesome game", "was made by Canyon", "Bryson and Kollin", "Murphy.", "", "Congrats on finding", "the egg."];
                 $("#divButtons").html(BTN_TRY_AGAIN + BTN_HOME);
                 $("#btnTryAgain").html("Keep Playing");
                 $("#btnTryAgain").bind('touchend', function() {
                     Board.clearMessage();
+                    Fireworks.clear();
                     $("#divButtons").html(BTN_HOME);
                 });
 

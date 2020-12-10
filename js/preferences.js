@@ -3,7 +3,7 @@ class Preferences {
     static variationNames = ["Normal", "Knight", "King", "Cross"];
 
     static get(key, defaultValue) {
-        if (this.isRunningAndroid) {
+        if (this.isRunningAndroid && !key == "difficulty") { // difficulty always gets passed through URL
             return Android.getInt(key, defaultValue);
         } else {
             return this.get_url_data(key, defaultValue);
