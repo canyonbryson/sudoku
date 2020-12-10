@@ -29,19 +29,19 @@
             <input type="hidden" class="pref_color_scheme" name="color_scheme" value="0" />
             <input type="hidden" class="pref_sudoku_type" name="sudoku_type" value="0" />
             <input type="hidden" name='difficulty' value="1">
-            <button type="submit" class="btn btn-success btn-lg btn-block" id="btnGenerate">Easy</button>
+            <button type="submit" class="btn btn-success btn-lg btn-block" class="btnStart">Easy</button>
         </form>
         <form action='game.html' method='GET'>
             <input type="hidden" class="pref_sudoku_type" name="sudoku_type" value="0" />
             <input type="hidden" class="pref_color_scheme" name="color_scheme" value="0" />
             <input type="hidden" name='difficulty' value="2">
-            <button type="submit" class="btn btn-primary btn-lg btn-block" id="btnGenerate">Medium</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" class="btnStart">Medium</button>
         </form>
         <form action='game.html' method='GET'>
             <input type="hidden" class="pref_sudoku_type" name="sudoku_type" value="0" />
             <input type="hidden" class="pref_color_scheme" name="color_scheme" value="0" />
             <input type="hidden" name='difficulty' value="3">
-            <button type="submit" class="btn btn-danger btn-lg btn-block" id="btnGenerate">Hard</button>
+            <button type="submit" class="btn btn-danger btn-lg btn-block" class="btnStart">Hard</button>
         </form>
         <form action='settings.html' method='GET'>
             <input type="hidden" class="pref_sudoku_type" name="sudoku_type" value="0" />
@@ -50,6 +50,7 @@
         </form>
     </div>
     </div>
+    <div id="loadingContainer" class="background"><div id="loading"></div></div>
 </body>
 
 </html>

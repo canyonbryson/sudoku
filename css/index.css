@@ -91,12 +91,17 @@ form {
     width: 100%;
 }
 
-.dropdown > button {
+.dropdown>button {
     margin-top: 4px;
 }
 
-.dropdown-menu > li {
-    padding: 16px;
+.dropdown-menu {
+    width: 100%;
+}
+
+.dropdown-menu>li {
+    padding: 12px;
+    font-size: 1.2em;
 }
 
 .larger {
@@ -120,4 +125,31 @@ form {
     bottom: 32px;
     left: 15%;
     width: 70%;
+}
+
+#loading {
+    border: 16px solid rgb(50, 50, 50);
+    border-top: 16px solid #4c57ee;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+#loadingContainer {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(180, 180, 180, 1);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

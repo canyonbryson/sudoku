@@ -66,7 +66,7 @@ class Board {
             this.gridCurrent = this.cloneArray(this.gridPrompt);
         }
 
-        $("#loading").hide();
+        $("#loadingContainer").hide();
     }
 
     static createBoard(data) {
@@ -293,15 +293,17 @@ class Board {
                 safeNums.push(i + 1);
             }
         }
-        if (this.type == 1) {
-            return this.checkKnight(safeNums, grid, row, col);
-        } else if (this.type == 2) {
-            return this.checkKing(safeNums, grid, row, col);
-        } else if (this.type == 3) {
-            return this.checkDiag(safeNums, grid, row, col);
-        } else {
-        return safeNums;
-    }}
+        switch (this.type) {
+            case 1:
+                return this.checkKnight(safeNums, grid, row, col);
+            case 2:
+                return this.checkKing(safeNums, grid, row, col);
+            case 3:
+                return this.checkDiag(safeNums, grid, row, col);
+            default:
+                return safeNums;
+        }
+    }
 
     static checkDiag(list, grid, row, col) {
         let del = [];
@@ -511,7 +513,7 @@ class Board {
 
     static updateNote(num) {
         if (!this.compareArray(this.highlightedCell, [-1, -1])) { // if there is a cell selected
-            if (this.gridPrompt[this.highlightedCell[1]][this.highlightedCell[0]] == 0) {
+            if (this.gridPrompt[this.highlightedCell[1]][this.highlightedCell[0]] == 0 && this.gridCurrent[this.highlightedCell[1]][this.highlightedCell[0]] == 0) {
                 //updates a cell with the desired number
                 this.gridNotes[this.highlightedCell[1]][this.highlightedCell[0]].push(num);
                 this.gridNotes[this.highlightedCell[1]][this.highlightedCell[0]] = this.removeNoteDuplicates(this.gridNotes[this.highlightedCell[1]][this.highlightedCell[0]]);
