@@ -1,30 +1,24 @@
-var painter;
-
 window.onload = function () {
-    painter = new Painter();
-    var type = get_url_data("type");
-    type = parseInt(type);
-    $(".inputSudokuType").val(type);
-    $(".btnScheme").bind('touchend', function() {
-        painter.setScheme(this.value);
-        if (this.value != 0){
-            document.getElementById('text').style.color = "white";
-        } else {
-            document.getElementById('text').style.color = "black";
-        }
+    Painter.init();
+    Preferences.init("color_scheme", 0);
+    Preferences.init("sudoku_type", 0); // load sudoku_type preferences into input dropdown
+
+    $(".btn_color_scheme").bind('touchend', function() {
+        Painter.setScheme(this.value);
+        Preferences.set("color_scheme", this.value);
     });
-    $(".btnType").bind('touchend', function() {
-        $(".inputSudokuType").val(this.value);
+
+    $(".btn_sudoku_type").bind('touchend', function() {
+        Preferences.set("sudoku_type", this.value);
     });
-    $('#overlay').bind('touchend', function() {
-        if (  document.getElementById("overlay").style.display == "block") {
-            document.getElementById("overlay").style.display = "none";
-        }
+
+    $('#instructionsOverlay').bind('touchend', function(e) {
+        $("#instructionsOverlay").hide();
+        e.preventDefault(); // prevents other buttons from being pushed while closing instructions
     });
-    $(".instructions").bind('touchend', function() {
-        if (  document.getElementById("overlay").style.display == "none") {
-            document.getElementById("overlay").style.display = "block";
-        } else {document.getElementById("overlay").style.display = "none";
-    }});
+
+    $("#btnInstructions").bind('touchend', function() {
+        $("#instructionsOverlay").show();
+    });
     
 }

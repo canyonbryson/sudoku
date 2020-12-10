@@ -3,7 +3,7 @@
 <head>
     <title>Sudoku</title>
     <meta charset="utf-8">
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
 
     <link rel="stylesheet" type="text/css" href="css/res/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="css/game.css" />
@@ -11,8 +11,8 @@
     <script src="js/res/jquery.js" type="text/javascript"></script>
     <script src="js/res/bootstrap.js" type="text/javascript"></script>
 
-    <script src="js/functions.js" type="text/javascript"></script>
-    <script src="js/draw.js" type="text/javascript"></script>
+    <script src="js/preferences.js" type="text/javascript"></script>
+    <script src="js/painter.js" type="text/javascript"></script>
     <script src="js/board.js" type="text/javascript"></script>
     <script src="js/keypad.js" type="text/javascript"></script>
     <script src="js/fireworks.js" type="text/javascript"></script>
@@ -26,12 +26,14 @@
     <canvas id="cvsMain"></canvas>
     <canvas id="cvsFireworks"></canvas>
     <canvas id="cvsMsg"></canvas>
-    <div id="divButtons">
-        <form action='index.html' method='GET'>
-            <button type="submit" class="btn btn-secondary" id="btnHome">Home</button>
-            <input type="hidden" class="inputColorScheme" name="colorscheme" value="0" />
-            <input type="hidden" class="inputSudokuType" name="type" value="0" />
-        </form>
+    <div id="buttonContainer">
+        <div id="divButtons">
+            <form action='index.html' method='GET'>
+                <button type='submit' class='btn btn-secondary' id='btnHome'>Home</button>
+                <input type='hidden' class='pref_color_scheme' name='color_scheme' value='0' />
+                <input type='hidden' class='pref_sudoku_type' name='sudoku_type' value='0' />
+            </form>
+        </div>
     </div>
 
     <div id="loading"></div>

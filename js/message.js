@@ -1,8 +1,8 @@
 class Message {
-    constructor(ctx, msg) {
+    static show(ctx, msg) {
         this.ctx = ctx;
 
-        const BTN_HOME = "<form action='index.html' method='GET'><button type='submit' class='btn btn-secondary' id='btnHome'>Home</button><input type='hidden' class='inputColorScheme' name='colorscheme' value='0' /></form>";
+        const BTN_HOME = $("#divButtons").html();
         const BTN_TRY_AGAIN = "<button class='btn btn-secondary' id='btnTryAgain'>Try Again</button>"
 
         switch (msg) {
@@ -15,7 +15,7 @@ class Message {
                 this.text = ["Uh oh!", "Looks like you", "made a mistake."];
                 $("#divButtons").html(BTN_TRY_AGAIN + BTN_HOME);
                 $("#btnTryAgain").bind('touchend', function() {
-                    board.clearMessage();
+                    Board.clearMessage();
                     $("#divButtons").html(BTN_HOME);
                 });
                 break;
@@ -24,7 +24,7 @@ class Message {
                 $("#divButtons").html(BTN_TRY_AGAIN + BTN_HOME);
                 $("#btnTryAgain").html("Keep Playing");
                 $("#btnTryAgain").bind('touchend', function() {
-                    board.clearMessage();
+                    Board.clearMessage();
                     $("#divButtons").html(BTN_HOME);
                 });
 
@@ -32,8 +32,8 @@ class Message {
         this.draw();
     }
 
-    draw() {
-        set_font(this.ctx, 36);
+    static draw() {
+        Painter.set_font(this.ctx, 36);
         this.ctx.fillStyle = "rgba(0,0,0,0.8)";
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.ctx.fillStyle = "white";

@@ -1,5 +1,3 @@
-rockets = [];
-
 class Particle {
     constructor(x,y,speedX,speedY,color) {
         this.cvs = document.getElementById("cvsFireworks");
@@ -34,7 +32,6 @@ class Rocket {
     constructor(width,height) {
         this.cvs = document.getElementById("cvsFireworks");
         this.ctx = this.cvs.getContext('2d');
-        // this.x = 100 + Math.floor(Math.random() * 160);
         this.x = Math.floor(Math.random() * Math.abs(width - 200)) + 100;
         this.y = height;
         this.speedX = Math.random() * 15 - 10;
@@ -91,24 +88,27 @@ class Rocket {
 }
 
 class Fireworks {
-    constructor(width,height) {
+    static init(width,height) {
         var cvs = document.getElementById("cvsFireworks");
         var ctx = cvs.getContext('2d');
-        rockets.push(new Rocket(width,height));
+        this.rockets = [];
+        this.rockets.push(new Rocket(width,height));
+
         setInterval(function() {
-            if (rockets.length < 6) {
-                rockets.push(new Rocket(width,height));
+            if (Fireworks.rockets.length < 6) {
+                Fireworks.rockets.push(new Rocket(width,height));
             }
         },550);
+
         setInterval(function() {
             ctx.clearRect(0,0,width,height);
-            for (var i = 0; i < rockets.length; i++) {
+            for (var i = 0; i < Fireworks.rockets.length; i++) {
 
-                if (rockets[i].flying === true || rockets[i].particles.length > 0) {
-                    rockets[i].draw();
-                    rockets[i].do_physics();
+                if (Fireworks.rockets[i].flying || Fireworks.rockets[i].particles.length > 0) {
+                    Fireworks.rockets[i].draw();
+                    Fireworks.rockets[i].do_physics();
                 } else {
-                    rockets.splice(i,1);
+                    Fireworks.rockets.splice(i,1);
                 }
             }
         },25);

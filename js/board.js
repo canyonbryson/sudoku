@@ -1,6 +1,6 @@
 
 class Board {
-    constructor(type, difficulty, ctx) {
+    static init(type, difficulty, ctx) {
         this.type = type; //1=knight, 2=king, 0=normal
         this.highlightedCell = [-1, -1];
         this.ctx = ctx;
@@ -9,15 +9,15 @@ class Board {
         this.cellSize = Math.floor(Math.min(this.ctx[0].canvas.width - 18, this.ctx[0].canvas.height - 18) / 9);
         this.origX = Math.floor(this.ctx[0].canvas.width / 2 - this.cellSize * 4.5);
         this.origY = 9;
-        this.keypad = new Keypad(this.ctx[0], this.origX, this.origY, this.cellSize);
+        Keypad.init(this.ctx[0], this.origX, this.origY, this.cellSize);
         this.generate();
         this.draw();
-        this.timer = new Timer(ctx[2]);
+        Timer.init(ctx[2]);
 
         this.inactive = false;
     }
 
-    generate() {
+    static generate() {
         this.gridNotes = [];
         for (let i = 0; i < 9; i++) { // initialize empty 9x9 grid
             this.data.push([0, 0, 0, 0, 0, 0, 0, 0, 0]);
@@ -65,11 +65,11 @@ class Board {
         $("#loading").hide();
     }
 
-    createBoard(data) {
+    static createBoard(data) {
         return this.fillCell(data).data; // call recursive function
     }
 
-    fillCell(data) {
+    static fillCell(data) {
         // duplicate data array
         let tempData = this.cloneArray(data);
 
@@ -117,11 +117,11 @@ class Board {
 
     }
 
-    removeCells(data, gridParameters) {
+    static removeCells(data, gridParameters) {
         return this.removeCell(data, gridParameters, 0, 0);
     }
 
-    removeCell(data, gridParameters, attempts, removed) {
+    static removeCell(data, gridParameters, attempts, removed) {
         if (attempts > gridParameters.maxAttempts || removed >= gridParameters.maxToRemove) {
             return {
                 data: data,
@@ -152,7 +152,7 @@ class Board {
         }
     }
 
-    isNewSolution(data) {
+    static isNewSolution(data) {
         let tempData = this.cloneArray(data);
         let emptyCells = [];
         for (let i = 0; i < tempData.length; i++) {
@@ -187,15 +187,15 @@ class Board {
         return { result: false };
     }
 
-    cloneArray(array) {
+    static cloneArray(array) {
         return JSON.parse(JSON.stringify(array));
     }
 
-    compareArray(array1, array2) {
+    static compareArray(array1, array2) {
         return (JSON.stringify(array1) == JSON.stringify(array2));
     }
 
-    shuffle(array) {
+    static shuffle(array) {
         for (let i = 0; i < array.length; i++) {
             let j = Math.floor(Math.random() * i);
             let temp = array[i];
@@ -204,7 +204,7 @@ class Board {
         }
     }
 
-    randomizeGroup(data, group) {
+    static randomizeGroup(data, group) {
         let list = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         this.shuffle(list);
         for (let i = 0; i < 3; i++) {
@@ -215,7 +215,7 @@ class Board {
         }
     }
 
-    isValid(data) {
+    static isValid(data) {
         const COMPLETE = [1, 1, 1, 1, 1, 1, 1, 1, 1];
         const BLANK = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         for (let i = 0; i < data.length; i++) { // check if all rows & columns are valid
@@ -249,7 +249,7 @@ class Board {
         return true;
     }
 
-    findSafeNumbers(grid, row, col, ignore = -1) {
+    static findSafeNumbers(grid, row, col, ignore = -1) {
         let index = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         if (ignore != -1) { // ignore former content of cell
@@ -293,7 +293,7 @@ class Board {
         return safeNums;
     }}
 
-    checkKnight(list, grid, row, col) {
+    static checkKnight(list, grid, row, col) {
         //if num in list violates knights, pop it off
         //move 2 then 1
         try {
@@ -337,7 +337,7 @@ class Board {
         return list;
     }
 
-    checkKing(list, grid, row, col) {
+    static checkKing(list, grid, row, col) {
         //if num in list violates Kings, pop it off
         //move 1 out
         try {
@@ -381,46 +381,47 @@ class Board {
         return list;
     }
 
-    draw() {
+    static draw() {
         this.ctx[0].clearRect(0, 0, this.ctx[0].canvas.width, this.ctx[0].canvas.height);
-        painter.set_font(this.ctx[0], this.cellSize);
+        Painter.set_font(this.ctx[0], this.cellSize);
+
         for (let i = 0; i < this.gridCurrent.length; i++) {
             for (let j = 0; j < this.gridCurrent[i].length; j++) {
                 if (this.gridCurrent[j][i] != 0) {
                     if (this.gridPrompt[j][i] != 0) {
-                        this.ctx[0].fillStyle = painter.colorSchemes[painter.currentScheme].accent; //"rgba(0,0,0,0.2)";
+                        this.ctx[0].fillStyle = Painter.colorSchemes[Painter.currentScheme].accent; //"rgba(0,0,0,0.2)";
                         this.ctx[0].fillRect(this.origX + this.cellSize * i, this.origY + this.cellSize * j, this.cellSize, this.cellSize);
                     }
                     this.ctx[0].fillStyle = "black";
-                    painter.draw_text(this.ctx[0], this.gridCurrent[j][i], this.origX + this.cellSize * i + this.cellSize * 0.5, this.origY + this.cellSize * j + this.cellSize * 0.5);
+                    Painter.draw_text(this.ctx[0], this.gridCurrent[j][i], this.origX + this.cellSize * i + this.cellSize * 0.5, this.origY + this.cellSize * j + this.cellSize * 0.5);
                 } else if (this.gridNotes[j][i].length != 0) {
-                    painter.set_font_small(this.ctx[0], this.cellSize);
+                    Painter.set_font_small(this.ctx[0], this.cellSize);
                     for (let k = 0; k < this.gridNotes[j][i].length; k++) {
                         let col = (this.gridNotes[j][i][k] - 1) % 3 + 0.4;
                         let row = (this.gridNotes[j][i][k] - col - 1) / 3 + 0.1;
-                        painter.draw_text(this.ctx[0], this.gridNotes[j][i][k], this.origX + this.cellSize * i + (col * this.cellSize * 0.3), this.origY + this.cellSize * j + (row * this.cellSize * 0.3));
+                        Painter.draw_text(this.ctx[0], this.gridNotes[j][i][k], this.origX + this.cellSize * i + (col * this.cellSize * 0.3), this.origY + this.cellSize * j + (row * this.cellSize * 0.3));
                     }
-                    painter.set_font(this.ctx[0], this.cellSize);
+                    Painter.set_font(this.ctx[0], this.cellSize);
                 }   
             }
         }
         for (let i = 0; i < 10; i++) {
-            painter.line(this.ctx[0], this.origX + this.cellSize * i, this.origY, this.origX + this.cellSize * i, this.origY + this.cellSize * 9, i);
+            Painter.line(this.ctx[0], this.origX + this.cellSize * i, this.origY, this.origX + this.cellSize * i, this.origY + this.cellSize * 9, i);
         }
         for (let j = 0; j < 10; j++) {
-            painter.line(this.ctx[0], this.origX, this.origY + this.cellSize * j, this.origX + this.cellSize * 9, this.origY + this.cellSize * j, j);
+            Painter.line(this.ctx[0], this.origX, this.origY + this.cellSize * j, this.origX + this.cellSize * 9, this.origY + this.cellSize * j, j);
         }
         // this.setCells(this.gridCurrent, this.origX, this.origY, this.cellSize);
-        this.keypad.draw(this.ctx[0]);
+        Keypad.draw(this.ctx[0]);
     }
 
-    clickedBoard(x, y) {
+    static clickedBoard(x, y) {
         let xx = x - this.origX;
         let yy = y - this.origY;
         return (xx >= 0 && xx <= this.cellSize * 9) && (yy >= 0 && yy <= this.cellSize * 9);
     }
 
-    getClickedCell(x, y) {
+    static getClickedCell(x, y) {
         // returns the cell with x, y coords
         x -= this.origX;
         y -= this.origY;
@@ -429,7 +430,7 @@ class Board {
         return [col, row];
     }
 
-    highlightCell(cellCoords, outline = true) {
+    static highlightCell(cellCoords, outline = true) {
         if (outline) {
             this.highlightedCell = cellCoords;
         }
@@ -441,10 +442,10 @@ class Board {
             let drawGradient = !outline;
             if (outline) {
                 this.draw(); // clear canvas and redraw board if selecting new cell
-                painter.line(this.ctx[0], cell_x, cell_y, cell_x + this.cellSize, cell_y, -1);
-                painter.line(this.ctx[0], cell_x, cell_y, cell_x, cell_y + this.cellSize, -1);
-                painter.line(this.ctx[0], cell_x + this.cellSize, cell_y, cell_x + this.cellSize, cell_y + this.cellSize, -1);
-                painter.line(this.ctx[0], cell_x, cell_y + this.cellSize, cell_x + this.cellSize, cell_y + this.cellSize, -1);
+                Painter.line(this.ctx[0], cell_x, cell_y, cell_x + this.cellSize, cell_y, -1);
+                Painter.line(this.ctx[0], cell_x, cell_y, cell_x, cell_y + this.cellSize, -1);
+                Painter.line(this.ctx[0], cell_x + this.cellSize, cell_y, cell_x + this.cellSize, cell_y + this.cellSize, -1);
+                Painter.line(this.ctx[0], cell_x, cell_y + this.cellSize, cell_x + this.cellSize, cell_y + this.cellSize, -1);
                 if (this.gridCurrent[cellCoords[1]][cellCoords[0]] != 0) {
                     this.highlightAllOfNumber(this.gridCurrent[cellCoords[1]][cellCoords[0]]);
                 } else {
@@ -453,8 +454,8 @@ class Board {
             }
             if (drawGradient) {
                 var grd = this.ctx[0].createRadialGradient(cell_x + this.cellSize / 2, cell_y + this.cellSize / 2, 10, cell_x + this.cellSize / 2, cell_y + this.cellSize / 2, this.cellSize);
-                grd.addColorStop(0, "rgba(0,62,214,0.09)");
-                grd.addColorStop(1, "rgba(0,151,255,0.8)");
+                grd.addColorStop(0, Painter.highlightGradient[0]);
+                grd.addColorStop(1, Painter.highlightGradient[1]);
                 this.ctx[0].fillStyle = grd;
                 this.ctx[0].fillRect(cell_x, cell_y, this.cellSize, this.cellSize);
             }
@@ -463,7 +464,7 @@ class Board {
         }
     }
 
-    highlightAllOfNumber(num) {
+    static highlightAllOfNumber(num) {
         for (let i = 0; i < this.gridCurrent.length; i++) {
             for (let j = 0; j < this.gridCurrent.length; j++) {
                 if (this.gridCurrent[i][j] == num) {
@@ -473,7 +474,7 @@ class Board {
         }
     }
 
-    isFull(data) {
+    static isFull(data) {
         for (let i = 0; i < data.length; i++) {
             if (data[i].includes(0)) {
                 return false;
@@ -482,7 +483,7 @@ class Board {
         return true;
     }
 
-    updateCell(num) {
+    static updateCell(num) {
         if (!this.compareArray(this.highlightedCell, [-1, -1])) { // if there is a cell selected
             if (this.gridPrompt[this.highlightedCell[1]][this.highlightedCell[0]] == 0) {
                 //updates a cell with the desired number
@@ -497,7 +498,7 @@ class Board {
         }
     }
 
-    updateNote(num) {
+    static updateNote(num) {
         if (!this.compareArray(this.highlightedCell, [-1, -1])) { // if there is a cell selected
             if (this.gridPrompt[this.highlightedCell[1]][this.highlightedCell[0]] == 0) {
                 //updates a cell with the desired number
@@ -510,27 +511,27 @@ class Board {
         }
     }
 
-    checkComplete() {
+    static checkComplete() {
         if (this.isFull(this.gridCurrent)) {
-            this.timer.stop();
+            Timer.stop();
             this.inactive = true;
             if (this.isValid(this.gridCurrent)) {
                 // won!
-                new Message(this.ctx[2], "won");
+                Message.show(this.ctx[2], "won");
             } else {
                 // bad
-                new Message(this.ctx[2], "incorrect");
+                Message.show(this.ctx[2], "incorrect");
             }
         }
     }
 
-    clearMessage() {
+    static clearMessage() {
         this.ctx[2].clearRect(0, 0, this.ctx[2].canvas.width, this.ctx[2].canvas.height);
-        this.timer.start();
+        Timer.start();
         this.inactive = false;
     }
 
-    removeNoteDuplicates(array) {
+    static removeNoteDuplicates(array) {
         let idx = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         let newArray = [];
         for (let i = 0; i < array.length; i++) {

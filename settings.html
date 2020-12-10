@@ -11,8 +11,8 @@
     <script src="js/res/jquery.js" type="text/javascript"></script>
     <script src="js/res/bootstrap.js" type="text/javascript"></script>
 
-    <script src="js/functions.js" type="text/javascript"></script>
-    <script src="js/draw.js" type="text/javascript"></script>
+    <script src="js/painter.js" type="text/javascript"></script>
+    <script src="js/preferences.js" type="text/javascript"></script>
     <script src="js/settings.js" type="text/javascript"></script>
 </head>
 
@@ -25,37 +25,35 @@
 
     <div id="main">
         <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Color Themes
-            <span class="caret"></span></button>
+            <span class="settingsTitle">Themes</span>
+            <button class="btn btn-block btn-primary dropdown-toggle display_color_scheme" type="button" data-toggle="dropdown">Themes</button>
             <ul class="dropdown-menu">
-              <li class="btnScheme" value="0" id="default">Default</li>
-              <li class="btnScheme" value="1" id="dark">Dark</li>
-              <li class="btnScheme" value="2" id="night">Night</li>
+              <li class="btn_color_scheme" id="btn_color_scheme_0" value="0" id="default">Default</li>
+              <li class="btn_color_scheme" id="btn_color_scheme_1" value="1" id="dark">Dark</li>
+              <li class="btn_color_scheme" id="btn_color_scheme_2" value="2" id="night">Night</li>
             </ul>
+
           </div> 
-          <br> 
-          <button id="instructions" type="button" class="btn btn-secondary instructions">Instructions</button>
-          <br>
-          <div id="overlay"  style="display: none;"><div id="text"><h6>Instructions:</h6><p>For normal Sudoku, Sudoku rules apply:</p>
+          <div id="instructionsOverlay"><div id="text" class=""><h6>Instructions:</h6><p>For normal Sudoku, Sudoku rules apply:</p>
              <p>A number should not repeat in the same box, row, or column.</p> 
              <p>In Knight Sudoku, normal Sudoku rules apply with the rule that a number may not repeat a knight's move away.</p>
              <p>In King Sudoku, normal Sudoku rules apply with the rule that a number may not repeat a king's move away.</p>
              <p style="font-weight:900">Click anywhere to exit.</p></div></div>
-          <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Sudoku Type
-            <span class="caret"></span></button>
+          <div class="dropdown" id="dropdownVariation">
+            <span class="settingsTitle">Sudoku Variation</span><br>
+            <button class="btn btn-block btn-primary dropdown-toggle display_sudoku_type" type="button" data-toggle="dropdown">Variation</button>
             <ul class="dropdown-menu">
-              <li class="btnType" value="0" id="normal">Normal</li>
-              <li class="btnType" value="1" id="knight">Knight</li>
-              <li class="btnType" value="2" id="king">King</li>
+              <li class="btn_sudoku_type" id="btn_sudoku_type_0" value="0" id="normal">Normal</li>
+              <li class="btn_sudoku_type" id="btn_sudoku_type_1" value="1" id="knight">Knight</li>
+              <li class="btn_sudoku_type" id="btn_sudoku_type_2" value="2" id="king">King</li>
             </ul>
           </div> 
-          <!--Info / instructions overlay-->
+          <button id="btnInstructions" type="button" class="btn btn-block btn-secondary instructions">Instructions</button>
           <br> 
           <form action='index.html' method='GET'>
-            <button type="submit" class="btn btn-secondary btn-lg btn-block" id="btnHome">Home</button>
-            <input type="hidden" class="inputColorScheme" name="colorscheme" value="0" />
-            <input type="hidden" class="inputSudokuType" name="type" value="0" />
+            <button type="submit" class="btn btn-secondary btn-lg btn-block btnBottom" id="btnHome">Home</button>
+            <input type="hidden" class="pref_color_scheme" name="color_scheme" value="0" />
+            <input type="hidden" class="pref_sudoku_type" name="sudoku_type" value="0" />
         </form>
     </div>
     </div>
