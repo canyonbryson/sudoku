@@ -295,41 +295,39 @@ class Board {
 
     checkKnight(list, grid, row, col) {
         //if num in list violates knights, pop it off
-        for (let i = 0; i < list.length; i++){
-            //move 2 then 1
-            try {
-                if (grid[row + 2][col + 1] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row + 2][col - 1] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row - 2][col + 1] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row - 2][col - 1] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row + 1][col + 2] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row + 1][col - 2] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row - 1][col + 2] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row - 1][col - 2] == list[i]){
-                    delete list[i];}
-            } catch {}
-        }
+        //move 2 then 1
+        try {
+            if (list.includes(grid[row + 2][col + 1])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row + 2][col - 1])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row - 2][col + 1])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row - 2][col - 1])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row + 1][col + 2])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row + 1][col - 2])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row - 1][col + 2])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row - 1][col - 2])){
+                delete list[i];}
+        } catch {}
         for (let i = 0; i < list.length; i++) {
             if (list[i] == undefined){
                 list.splice(i, 1);
@@ -341,41 +339,39 @@ class Board {
 
     checkKing(list, grid, row, col) {
         //if num in list violates Kings, pop it off
-        for (let i = 0; i < list.length; i++){
-            //move 1 out
-            try {
-                if (grid[row][col + 1] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row][col - 1] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row - 1][col + 1] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row - 1][col - 1] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row + 1][col + 1] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row + 1][col - 1] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row - 1][col] == list[i]){
-                    delete list[i];}
-            } catch {}
-            try {
-                if (grid[row + 1][col] == list[i]){
-                    delete list[i];}
-            } catch {}
-        }
+        //move 1 out
+        try {
+            if (list.includes(grid[row][col + 1])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row][col - 1])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row - 1][col + 1])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row - 1][col - 1])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row + 1][col + 1])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row + 1][col - 1])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row - 1][col])){
+                delete list[i];}
+        } catch {}
+        try {
+            if (list.includes(grid[row + 1][col])){
+                delete list[i];}
+        } catch {}
         for (let i = 0; i < list.length; i++) {
             if (list[i] == undefined){
                 list.splice(i, 1);
