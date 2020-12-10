@@ -13,6 +13,7 @@ class Timer {
             case 3:
                 this.difficulty = "Hard";
         }
+        this.variation = Preferences.variationNames[Preferences.get("sudoku_type", 0)];
         this.start();
     }
 
@@ -36,6 +37,7 @@ class Timer {
         Timer.ctx.fillText(Timer.formatSeconds(timeElapsed), 16, Timer.ctx.canvas.height - 16);
         Timer.ctx.textAlign = "right";
         Timer.ctx.fillText(Timer.difficulty, window.innerWidth - 16, Timer.ctx.canvas.height - 16);
+        Timer.ctx.fillText(Timer.variation, window.innerWidth - 16, Timer.ctx.canvas.height - 46);
         Timer.ctx.textAlign = "center";
         Timer.ctx.textBaseline = "middle";
     }

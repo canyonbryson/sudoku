@@ -1,5 +1,6 @@
 class Preferences {
     static isRunningAndroid = false;
+    static variationNames = ["Normal", "Knight", "King", "Cross"];
 
     static get(key, defaultValue) {
         if (this.isRunningAndroid) {
@@ -26,6 +27,14 @@ class Preferences {
             $("#btn_" + key + "_" + val).css("background-color", "rgb(210,210,210)");
         }
         return val;
+    }
+
+    static initHome(key, defaultValue) {
+        let val = this.get(key, defaultValue);
+        $(".pref_" + key).val(val);
+        if (key == "sudoku_type") {
+            $("#display_" + key).html(this.variationNames[val] + " Sudoku");
+        }
     }
 
     static getQueryString() {

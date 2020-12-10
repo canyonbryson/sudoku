@@ -1,5 +1,5 @@
 
 window.onload = function() {
     Painter.init();
-    Preferences.init("sudoku_type", 0);
+    Preferences.initHome("sudoku_type", 0);
 };

@@ -339,38 +339,14 @@ class Board {
         //if num in list violates knights, delete, then remove undefined
         //move 2 then 1
         let del = [];
-        try {
-            if (list.includes(grid[row + 2][col + 1])){
-                del.push(grid[row + 2][col + 1]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row + 2][col - 1])){
-                del.push(grid[row +2][col - 1]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row - 2][col + 1])){
-                del.push(grid[row - 2][col + 1]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row - 2][col - 1])){
-                del.push(grid[row - 2][col - 1]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row + 1][col + 2])){
-                del.push(grid[row + 1][col +2]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row + 1][col - 2])){
-                del.push(grid[row + 1][col - 2]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row - 1][col + 2])){
-                del.push(grid[row - 1][col + 2]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row - 1][col - 2])){
-                del.push(grid[row - 1][col - 2]);}
-        } catch {}
+        this.checkMove(grid, list, del, row + 2, col + 1);
+        this.checkMove(grid, list, del, row + 2, col - 1);
+        this.checkMove(grid, list, del, row - 2, col + 1);
+        this.checkMove(grid, list, del, row - 2, col - 1);
+        this.checkMove(grid, list, del, row + 1, col + 2);
+        this.checkMove(grid, list, del, row + 1, col - 2);
+        this.checkMove(grid, list, del, row - 1, col + 2);
+        this.checkMove(grid, list, del, row - 1, col - 2);
         for (let i = 0; i < list.length; i++) {
             if (del.includes(list[i])){
                 list.splice(i, 1);
@@ -380,42 +356,26 @@ class Board {
         return list;
     }
 
+    static checkMove(grid, list, del, row, col) {
+        if (row > 0 && row < grid.length && col > 0 && col < grid[row].length) {
+            if (list.includes(grid[row][col])) {
+                del.push(grid[row][col]);
+            }
+        }
+    }
+
     static checkKing(list, grid, row, col) {
         //if num in list violates Kings, delete and remove
         //move 1 out
         let del = [];
-        try {
-            if (list.includes(grid[row][col + 1])){
-                del.push(grid[row][col + 1]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row][col - 1])){
-                del.push(grid[row][col - 1]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row - 1][col + 1])){
-                del.push(grid[row - 1][col + 1]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row - 1][col - 1])){
-                del.push(grid[row - 1][col - 1]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row + 1][col + 1])){
-                del.push(grid[row + 1][col + 1]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row + 1][col - 1])){
-                del.push(grid[row + 1][col - 1]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row - 1][col])){
-                del.push(grid[row - 1][col]);}
-        } catch {}
-        try {
-            if (list.includes(grid[row + 1][col])){
-                del.push(grid[row + 1][col]);}
-        } catch {}
+        this.checkMove(grid, list, del, row, col + 1);
+        this.checkMove(grid, list, del, row, col - 1);
+        this.checkMove(grid, list, del, row - 1, col + 1);
+        this.checkMove(grid, list, del, row - 1, col - 1);
+        this.checkMove(grid, list, del, row - 1, col);
+        this.checkMove(grid, list, del, row + 1, col + 1);
+        this.checkMove(grid, list, del, row + 1, col - 1);
+        this.checkMove(grid, list, del, row + 1, col);
         for (let i = 0; i < list.length; i++) {
             if (del.includes(list[i])){
                 list.splice(i, 1);
@@ -456,8 +416,8 @@ class Board {
             Painter.line(this.ctx[0], this.origX, this.origY + this.cellSize * j, this.origX + this.cellSize * 9, this.origY + this.cellSize * j, j);
         }
         if (this.type == 3){
-            painter.line(this.ctx[0], this.origX, this.origY, this.origX + this.cellSize*9, this.origY+this.cellSize*9, 10);
-            painter.line(this.ctx[0], this.origX  + this.cellSize*9, this.origY, this.origX, this.origY+this.cellSize*9, 10);
+            Painter.line(this.ctx[0], this.origX, this.origY, this.origX + this.cellSize*9, this.origY+this.cellSize*9, 10);
+            Painter.line(this.ctx[0], this.origX  + this.cellSize*9, this.origY, this.origX, this.origY+this.cellSize*9, 10);
         }
         // this.setCells(this.gridCurrent, this.origX, this.origY, this.cellSize);
         Keypad.draw(this.ctx[0]);

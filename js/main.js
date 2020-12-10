@@ -1,5 +1,7 @@
 window.onload = function () {
     Painter.init();
+    Preferences.init("color_scheme", 0);
+    Preferences.init("sudoku_type", 0);
 
     var cvs = [document.querySelector("#cvsMain"), document.querySelector("#cvsFireworks"), document.querySelector("#cvsMsg")];
     var ctx = initializeContexts(cvs);
