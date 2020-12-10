@@ -2,6 +2,7 @@
 class Board {
     constructor(type, difficulty, ctx) {
         this.type = type; //1=knight, 2=king, 0=normal
+        this.highlightCells = [0][-1, -1];
         this.highlightedCell = [-1, -1];
         this.ctx = ctx;
         this.difficulty = difficulty;
@@ -23,10 +24,14 @@ class Board {
             this.data.push([0, 0, 0, 0, 0, 0, 0, 0, 0]);
             this.gridNotes.push([[], [], [], [], [], [], [], [], []]);
         }
-
+        if (this.type == 3){
+            this.randomizeGroup(this.data, 2);
+            // this.randomizeGroup(this.data, 4);
+            this.randomizeGroup(this.data, 9);
+        } else {
         this.randomizeGroup(this.data, 1);
         if (this.type == 0) {this.randomizeGroup(this.data, 5);}
-        this.randomizeGroup(this.data, 9);
+        this.randomizeGroup(this.data, 9);}
 
         let cellsRemoved = 0;
         let gridParameters = { minToRemove: 36, maxToRemove: 42, maxAttempts: 50 };
@@ -208,10 +213,11 @@ class Board {
         let list = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         this.shuffle(list);
         for (let i = 0; i < 3; i++) {
-            let g = Math.floor((group - 1) / 3) * 3; //Start at row 0, 3, 6
-            data[g + i][g] = list[i];
-            data[g + i][g + 1] = list[i + 3];
-            data[g + i][g + 2] = list[i + 6];
+            let r = Math.floor((group-1) / 3) * 3; //Start at row 0, 3, 6
+            let c = ((group-1) % 3) * 3; //Start at col 0,3,6
+            data[r + i][c] = list[i];
+            data[r + i][c + 1] = list[i + 3];
+            data[r + i][c + 2] = list[i + 6];
         }
     }
 
@@ -289,47 +295,85 @@ class Board {
             return this.checkKnight(safeNums, grid, row, col);
         } else if (this.type == 2) {
             return this.checkKing(safeNums, grid, row, col);
+        } else if (this.type == 3) {
+            return this.checkDiag(safeNums, grid, row, col);
         } else {
         return safeNums;
     }}
 
+    checkDiag(list, grid, row, col) {
+        let del = [];
+        if (row == col) { //if on the diagonal
+            for (let i = 0; i < 9; i++) {
+                if (list.includes(grid[i][i])) {
+                    del.push(grid[i][i]);
+                }
+            }
+            for (let i = 0; i < list.length; i++) {
+                if (del.includes(list[i])){
+                    list.splice(i, 1);
+                    i--;
+                }
+            }
+            if (row != 4){
+                return list;
+            }
+        } if (row == (8 - col)) {
+            for (let i = 0; i < 9; i++) {
+                if (list.includes(grid[i][8 - i])) {
+                    del.push(grid[i][8 - i]);
+                }
+            }
+            for (let i = 0; i < list.length; i++) {
+                if (del.includes(list[i])){
+                    list.splice(i, 1);
+                    i--;
+                }
+            }
+            return list;
+        } else {
+            return list;
+        }
+    }
+
     checkKnight(list, grid, row, col) {
-        //if num in list violates knights, pop it off
+        //if num in list violates knights, delete, then remove undefined
         //move 2 then 1
+        let del = [];
         try {
             if (list.includes(grid[row + 2][col + 1])){
-                delete list[i];}
+                del.push(grid[row + 2][col + 1]);}
         } catch {}
         try {
             if (list.includes(grid[row + 2][col - 1])){
-                delete list[i];}
+                del.push(grid[row +2][col - 1]);}
         } catch {}
         try {
             if (list.includes(grid[row - 2][col + 1])){
-                delete list[i];}
+                del.push(grid[row - 2][col + 1]);}
         } catch {}
         try {
             if (list.includes(grid[row - 2][col - 1])){
-                delete list[i];}
+                del.push(grid[row - 2][col - 1]);}
         } catch {}
         try {
             if (list.includes(grid[row + 1][col + 2])){
-                delete list[i];}
+                del.push(grid[row + 1][col +2]);}
         } catch {}
         try {
             if (list.includes(grid[row + 1][col - 2])){
-                delete list[i];}
+                del.push(grid[row + 1][col - 2]);}
         } catch {}
         try {
             if (list.includes(grid[row - 1][col + 2])){
-                delete list[i];}
+                del.push(grid[row - 1][col + 2]);}
         } catch {}
         try {
             if (list.includes(grid[row - 1][col - 2])){
-                delete list[i];}
+                del.push(grid[row - 1][col - 2]);}
         } catch {}
         for (let i = 0; i < list.length; i++) {
-            if (list[i] == undefined){
+            if (del.includes(list[i])){
                 list.splice(i, 1);
                 i--;
             }
@@ -338,42 +382,43 @@ class Board {
     }
 
     checkKing(list, grid, row, col) {
-        //if num in list violates Kings, pop it off
+        //if num in list violates Kings, delete and remove
         //move 1 out
+        let del = [];
         try {
             if (list.includes(grid[row][col + 1])){
-                delete list[i];}
+                del.push(grid[row][col + 1]);}
         } catch {}
         try {
             if (list.includes(grid[row][col - 1])){
-                delete list[i];}
+                del.push(grid[row][col - 1]);}
         } catch {}
         try {
             if (list.includes(grid[row - 1][col + 1])){
-                delete list[i];}
+                del.push(grid[row - 1][col + 1]);}
         } catch {}
         try {
             if (list.includes(grid[row - 1][col - 1])){
-                delete list[i];}
+                del.push(grid[row - 1][col - 1]);}
         } catch {}
         try {
             if (list.includes(grid[row + 1][col + 1])){
-                delete list[i];}
+                del.push(grid[row + 1][col + 1]);}
         } catch {}
         try {
             if (list.includes(grid[row + 1][col - 1])){
-                delete list[i];}
+                del.push(grid[row + 1][col - 1]);}
         } catch {}
         try {
             if (list.includes(grid[row - 1][col])){
-                delete list[i];}
+                del.push(grid[row - 1][col]);}
         } catch {}
         try {
             if (list.includes(grid[row + 1][col])){
-                delete list[i];}
+                del.push(grid[row + 1][col]);}
         } catch {}
         for (let i = 0; i < list.length; i++) {
-            if (list[i] == undefined){
+            if (del.includes(list[i])){
                 list.splice(i, 1);
                 i--;
             }
@@ -410,6 +455,10 @@ class Board {
         for (let j = 0; j < 10; j++) {
             painter.line(this.ctx[0], this.origX, this.origY + this.cellSize * j, this.origX + this.cellSize * 9, this.origY + this.cellSize * j, j);
         }
+        if (this.type == 3){
+            painter.line(this.ctx[0], this.origX, this.origY, this.origX + this.cellSize*9, this.origY+this.cellSize*9, 10);
+            painter.line(this.ctx[0], this.origX  + this.cellSize*9, this.origY, this.origX, this.origY+this.cellSize*9, 10);
+        }
         // this.setCells(this.gridCurrent, this.origX, this.origY, this.cellSize);
         this.keypad.draw(this.ctx[0]);
     }
@@ -427,6 +476,12 @@ class Board {
         let col = Math.floor(x / this.cellSize);
         let row = Math.floor(y / this.cellSize);
         return [col, row];
+    }
+
+    highlightCells(cells) {
+        for (let i = 0; i < this.highlightCells.length; i++){
+            this.highlightCell(this.highlightCells[i]);
+        }
     }
 
     highlightCell(cellCoords, outline = true) {

@@ -41,6 +41,9 @@ class Painter {
         } else if (num == -1) {
             ctx.lineWidth = 3;
             ctx.strokeStyle = "rgb(0,151,255)";
+        } else if (num == 10) {
+            ctx.lineWidth = .5;
+            ctx.strokeStyle = this.colorSchemes[this.currentScheme].foreground;
         }
         else {
             ctx.lineWidth = 1;
