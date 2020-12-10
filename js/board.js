@@ -73,23 +73,32 @@ class Board {
         return this.fillCell(data).data; // call recursive function
     }
 
+    static findEmptyCells(data, onlyOne) {
+        let empty = [];
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < data[i].length; j++) {
+                if (data[i][j] == 0) {
+                    if (onlyOne) {
+                        empty = [i, j];
+                        i = 10; // get out of both for loops
+                        break;
+                    } else {
+                        empty.push([i, j]);
+                    }
+                }
+            }
+        }
+        return empty;
+    }
+
     static fillCell(data) {
         // duplicate data array
         let tempData = this.cloneArray(data);
 
         // find next empty cell
         // if no empty cells, return data
-        let empty = [-1, -1];
-        for (let i = 0; i < tempData.length; i++) {
-            for (let j = 0; j < tempData[i].length; j++) {
-                if (tempData[i][j] == 0) {
-                    empty = [i, j];
-                    i = 10; // get out of both for loops
-                    break;
-                }
-            }
-        }
-        if (empty[0] == -1 && empty[1] == -1) { // if all cells are filled, return the result
+        let empty = this.findEmptyCells(tempData, true);
+        if (empty.length == 0) { // if all cells are filled, return the result
             return {
                 data: tempData,
                 result: true
@@ -158,20 +167,14 @@ class Board {
 
     static isNewSolution(data) {
         let tempData = this.cloneArray(data);
-        let emptyCells = [];
-        for (let i = 0; i < tempData.length; i++) {
-            for (let j = 0; j < tempData[i].length; j++) {
-                if (tempData[i][j] == 0) {
-                    emptyCells.push([i, j]);
-                }
-            }
-        }
+        let emptyCells = this.findEmptyCells(data, false);
         if (emptyCells.length == 0) { // if all cells are filled, return the result
             return {
                 data: tempData,
                 result: true
             };
         }
+
         for (let i = 0; i < emptyCells.length; i++) {
             // fill it with every safe solution
             let empty = emptyCells[i];
