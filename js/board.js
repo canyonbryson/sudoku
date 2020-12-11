@@ -400,9 +400,10 @@ class Board {
                     if (this.gridPrompt[j][i] != 0) {
                         this.ctx[0].fillStyle = Painter.colorSchemes[Painter.currentScheme].accent; //"rgba(0,0,0,0.2)";
                         this.ctx[0].fillRect(this.origX + this.cellSize * i, this.origY + this.cellSize * j, this.cellSize, this.cellSize);
-                    }
-                    this.ctx[0].fillStyle = "black";
-                    Painter.draw_text(this.ctx[0], this.gridCurrent[j][i], this.origX + this.cellSize * i + this.cellSize * 0.5, this.origY + this.cellSize * j + this.cellSize * 0.5);
+                    } if(this.gridCurrent[j][i] != this.gridSolution[j][i]){
+                        Painter.draw_text(this.ctx[0], this.gridCurrent[j][i], this.origX + this.cellSize * i + this.cellSize * 0.5, this.origY + this.cellSize * j + this.cellSize * 0.5, true);}
+                        else {
+                    Painter.draw_text(this.ctx[0], this.gridCurrent[j][i], this.origX + this.cellSize * i + this.cellSize * 0.5, this.origY + this.cellSize * j + this.cellSize * 0.5);}
                 } else if (this.gridNotes[j][i].length != 0) {
                     Painter.set_font_small(this.ctx[0], this.cellSize);
                     for (let k = 0; k < this.gridNotes[j][i].length; k++) {

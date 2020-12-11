@@ -68,8 +68,11 @@ class Painter {
         ctx.closePath();
     }
 
-    static draw_text(ctx, text, x, y) {
+    static draw_text(ctx, text, x, y, wrong=false) {
         ctx.fillStyle = this.foreground;
+        if (wrong) {
+            ctx.fillStyle = "red";
+        }
         if (text != 10) {
             ctx.beginPath();
             ctx.fillText(text, x, y + 4);
