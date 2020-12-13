@@ -62,8 +62,9 @@ class Board {
     }
 
     static createBoard(data) {
-        return this.placeNumInGroup(1, 1, data).data;
-    //     return this.fillCell(data).data; // call recursive function
+        if (this.type == 1){
+        return this.placeNumInGroup(1, 1, data).data;}
+        else {return this.fillCell(data).data;} // call recursive function
     }
 
     static placeNumInGroup(num, group, grid) {
