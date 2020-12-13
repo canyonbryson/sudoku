@@ -23,26 +23,18 @@ class Board {
             this.data.push([0, 0, 0, 0, 0, 0, 0, 0, 0]);
             this.gridNotes.push([[], [], [], [], [], [], [], [], []]);
         }
-        if (this.type == 3){
-            this.randomizeGroup(this.data, 2);
-            // this.randomizeGroup(this.data, 4);
-            this.randomizeGroup(this.data, 9);
-        } else {
-        this.randomizeGroup(this.data, 1);
-        if (this.type == 0) {this.randomizeGroup(this.data, 5);}
-        this.randomizeGroup(this.data, 9);}
-
+        
         let cellsRemoved = 0;
         let gridParameters = { minToRemove: 36, maxToRemove: 42, maxAttempts: 50 };
-        switch (this.difficulty) {
+        switch (this.difficulty) {           //parameters for each difficulty
             case 1:
                 gridParameters = { minToRemove: 36, maxToRemove: 42, maxAttempts: 50 };
                 break;
             case 2:
-                gridParameters = { minToRemove: 41, maxToRemove: 46, maxAttempts: 100 };
+                gridParameters = { minToRemove: 43, maxToRemove: 49, maxAttempts: 100 };
                 break;
             case 3:
-                gridParameters = { minToRemove: 47, maxToRemove: 64, maxAttempts: 150 };
+                gridParameters = { minToRemove: 47, maxToRemove: 64, maxAttempts: 300 };
         }
 
         while (cellsRemoved < gridParameters.minToRemove) {
@@ -70,7 +62,101 @@ class Board {
     }
 
     static createBoard(data) {
-        return this.fillCell(data).data; // call recursive function
+        return this.placeNumInGroup(1, 1, data).data;
+    //     return this.fillCell(data).data; // call recursive function
+    }
+
+    static placeNumInGroup(num, group, grid) {
+        if (group == 10) {
+            group = 1;
+            num += 1;
+        }
+        if (num == 10) {
+            return {
+                data: grid,
+                result: true
+            };
+        }
+        let tempGrid = this.cloneArray(grid);
+        let emp = [];
+        let r = Math.floor((group-1) / 3) * 3; //Start at row 0, 3, 6
+        let c = ((group-1) % 3) * 3; //Start at col 0,3,6
+        //reduce non safe cells
+        emp = this.getEmptyInGroup(num, r, c, tempGrid, emp);
+        while (emp.length > 0){
+            let len = emp.length;
+            let ran = Math.floor(Math.random() * len); //for harder boards and knight, we'll pick this strategically
+            let cell = emp.splice(ran, 1)[0];
+            tempGrid[cell[0]][cell[1]] = num;
+            let result = this.placeNumInGroup(num, group + 1, tempGrid);
+            if (result.result){
+                return {
+                    data: result.data,
+                    result: true
+                };
+            } else {
+                tempGrid[cell[0]][cell[1]] = 0;
+            }
+        }
+        return {
+            data: grid,
+            result: false
+        };
+    }
+     
+    static getEmptyInGroup(num, r, c, grid, emp){
+        for(let j=0; j<3; j++){
+            let row = [];
+            let col = [];
+            let col2 = [];
+            let col3 = [];
+            for (let i = 0; i<9; i++){
+                row.push(grid[r+j][i]);
+                col.push(grid[i][c]);
+                col2.push(grid[i][c+1]);
+                col3.push(grid[i][c+2]);
+            }
+            if (!row.includes(num)){ //if not in row, col, or if not a filled cell
+                if(!col.includes(num) && grid[r+j][c] == 0){
+                    //add row cells from emp
+                    emp.push([r+j, c]);}
+                if(!col2.includes(num) && grid[r+j][c+1] == 0){
+                    emp.push([r+j, c+1]);}
+                if(!col3.includes(num) && grid[r+j][c+2] == 0){
+                    emp.push([r+j, c+2]);}
+            }
+        }
+        if (this.type == 1) {
+            return this.knight(num, grid, emp);
+        } else {
+            return emp;
+        }
+    }
+
+    static knight(num, grid, emp){
+        let list = [];
+        for (let i = 0; i<emp.length; i++){
+            let r = emp[i][0];
+            let c = emp[i][1];
+            this.check(grid, list, r + 2, c + 1);
+            this.check(grid, list, r + 2, c - 1);
+            this.check(grid, list, r - 2, c + 1);
+            this.check(grid, list, r - 2, c - 1);
+            this.check(grid, list, r + 1, c + 2);
+            this.check(grid, list, r + 1, c - 2);
+            this.check(grid, list, r - 1, c + 2);
+            this.check(grid, list, r - 1, c - 2);
+            if (list.includes(num)){
+                emp.splice(i, 1);
+                i--;
+            }
+        }
+        return emp;
+    }
+    static check(grid, list, row, col) {
+        if (row > 0 && row < grid.length) {
+            list.push(grid[row][col]);
+        }
     }
 
     static findEmptyCells(data, onlyOne) {
@@ -111,7 +197,7 @@ class Board {
         while (safe.length > 0) { // loop through all safe numbers
             let index = 0;
             let numToCheck = safe.splice(index, 1)[0];
-            tempData[empty[0]][empty[1]] = numToCheck; // set found empty cell to the first/last safe number
+            tempData[empty[0]][empty[1]] = numToCheck; // set found empty cell to the first safe number
             let result = this.fillCell(tempData); // recursively call to fill next cell
             if (result.result) { // if returned successfully, return the new array
                 return {
@@ -362,7 +448,7 @@ class Board {
     }
 
     static checkMove(grid, list, del, row, col) {
-        if (row > 0 && row < grid.length && col > 0 && col < grid[row].length) {
+        if (row > 0 && row < grid.length) {
             if (list.includes(grid[row][col])) {
                 del.push(grid[row][col]);
             }
