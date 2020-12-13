@@ -84,8 +84,7 @@ class Board {
         //reduce non safe cells
         emp = this.getEmptyInGroup(num, r, c, tempGrid, emp);
         while (emp.length > 0){
-            let len = emp.length;
-            let ran = Math.floor(Math.random() * len); //for harder boards and knight, we'll pick this strategically
+            let ran = this.pickCell(emp, tempGrid, num, r, c) //for harder boards and knight, we'll pick this strategically
             let cell = emp.splice(ran, 1)[0];
             tempGrid[cell[0]][cell[1]] = num;
             let result = this.placeNumInGroup(num, group + 1, tempGrid);
@@ -102,6 +101,33 @@ class Board {
             data: grid,
             result: false
         };
+    }
+
+    static pickCell(emp, grid, num, r, c){
+        if (this.type == 1) {
+            //if num is in c+-1 or r+-1, pick emp[c], else ran
+            if (c!=0 && (grid[r][c-1] == num || grid[r+1][c-1] == num || grid[r+2][c-1] == num)){
+                if (emp.includes([r+1,c])) {return emp.indexOf([r+1, c]);}
+                if (emp.includes([r][c])){return emp.indexOf([r][c]);}
+                if (emp.includes([r+2][c])){return emp.indexOf([r+2][c]);}
+            } else if (c != 6 && (grid[r][c+3] == num || grid[r+1][c+3] == num || grid[r+2][c+3] == num)) {
+                if (emp.includes([r+1,c+2])) {return emp.indexOf([r+1, c+2]);}
+                if (emp.includes([r][c+2])){return emp.indexOf([r][c+2]);}
+                if (emp.includes([r+2][c+2])){return emp.indexOf([r+2][c+2]);}
+            } else if (r != 0 && (grid[r-1][c] == num || grid[r-1][c+1] == num || grid[r-1][c+2] == num)){
+                if (emp.includes([r-1,c])) {return emp.indexOf([r-1, c]);}
+                if (emp.includes([r-1][c+1])){return emp.indexOf([r-1][c+1]);}
+                if (emp.includes([r-1][c+2])){return emp.indexOf([r-1][c+2]);}
+            } else if (r != 6 && (grid[r+3][c] == num || grid[r+3][c+1] == num || grid[r+3][c+2] == num)) {
+                if (emp.includes([r+3,c])) {return emp.indexOf([r+3, c]);}
+                if (emp.includes([r+3][c+1])){return emp.indexOf([r+3][c+1]);}
+                if (emp.includes([r+3][c+2])){return emp.indexOf([r+3][c+2]);}
+            } else {
+                return Math.floor(Math.random() * emp.length);
+            }
+        } else {
+            return Math.floor(Math.random() * emp.length);
+        }
     }
      
     static getEmptyInGroup(num, r, c, grid, emp){
